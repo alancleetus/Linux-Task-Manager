@@ -38,3 +38,20 @@ def round2(val):
     except:
         print("Error: Unable to round")
         return None
+
+def calculateCounterFreq(prev, curr, timeInterval):
+    """
+    This function calculates the frequency based on the current and previous values.
+
+    Parameters:
+        curr (any number): The current value of a data set
+        prev (any number): The previous value of a data set
+        timeInterval (float): The interval for which the frequency is calculated
+    Returns:
+        float: The calculated frequency
+    """
+    try:
+        return (curr-prev)/timeInterval 
+    except:
+        print("Error: unable to calculate counter frequency")
+        return None

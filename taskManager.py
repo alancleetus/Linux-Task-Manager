@@ -1,6 +1,6 @@
 import time
 import memStats
-#import diskStats
+import diskStats
 #import cpuStats
 #import processStats
 #import netStats
@@ -9,14 +9,13 @@ import memStats
 
 TIME_INTERVAL = None
 
+#TIME_INTERVAL = 1
+
 while not TIME_INTERVAL:
     try:
         TIME_INTERVAL = int(input("What time interval would you like to use?(in sec) "))
     except:
         print("Please enter a valid time interval.")
-
-#TIME_INTERVAL = 1
-
 
 try:
     while(True):
@@ -24,8 +23,10 @@ try:
 
         print("\nMEMORY:")
         memStats.printAll()
+        print("\nDisk:")
+        diskStats.printAll()
         
-
+        print("\n-----------------------------\n")
 except KeyboardInterrupt:
     print("\nexiting...")
 
