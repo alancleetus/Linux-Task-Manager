@@ -51,6 +51,51 @@ class BasicCounter:
         return str(self)
 
 
+class BasicGauge: 
+    def __init__(self, name):
+        self.name = name
+        self.value = {"prev":0, "curr":0}
+        self.time = {"prev":0, "curr":0}
+
+    def updateValue(self, value):
+        self.value["prev"] = self.value["curr"]
+        self.value["curr"] = value 
+
+    def updateTime(self, time):
+        self.time["prev"] = self.time["curr"]
+        self.time["curr"] = time 
+
+    def updateAll(self, value, time):
+        self.updateValue(value) 
+        self.updateTime(time)
+
+    def calculateAverage(self): 
+        return (float(self.value["curr"]+self.value["prev"])/2)
+
+    def __eq__(self, other): 
+        if not isinstance(other, BasicGauge):
+            return NotImplemented
+
+        return self.name == other.name
+
+    def __str__(self):
+        avg = self.calculateAverage()
+
+        msg = "Name: {}\n Value\tprev:{}\tcurr:{}\tutil:{}/s\n Read Time\tprev:{}\tcurr:{}\n".format(
+            self.name, 
+            self.value["prev"],
+            self.value["curr"], 
+            round2(avg),
+            round2(self.time["prev"]),
+            round2(self.time["curr"])          
+        )
+
+        return msg
+
+    def __repr__(self):
+        return str(self)
+
+
 def readFile(path):
     """
     This function reads a file.

@@ -19,18 +19,18 @@ while not TIME_INTERVAL:
 try:
     while(True):
         time.sleep(TIME_INTERVAL)
-
-        """print("\nMEMORY:")
+        """
+        print("\nMEMORY:")
         memStats.printAll()
         
 
         print("\nDisk:")
         diskStats.printAll()
-        """
+        
 
         print("\nCPU:")
         cpuStats.printAll()
-        
+        """
         print("\n-----------------------------\n")
 except KeyboardInterrupt:
     print("\nexiting...")
