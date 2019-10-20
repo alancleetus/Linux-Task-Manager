@@ -7,8 +7,7 @@ import time
 from disk import Disk
 from helperFunctions import readFile, round2
 
-diskList=[] #list of dictionaries to hold the info for each disk
-lastDiskReadTime = {"prev":0,"curr":0}
+diskList=[]
 
 def initDiskList(diskStatsFile): 
     """
@@ -28,7 +27,7 @@ def parseInfo(diskStatsFile, readTime):
 
     Parameters:
         diskStatsFile (str): The contents of /proc/diskstats.
-        readTime (float): The time at which /prc/diskstats was read.
+        readTime (float): The time at which /proc/diskstats was read.
     Returns:
         list: Returns a list of Disk objects for each disk on the system.
     """
@@ -44,7 +43,7 @@ def parseInfo(diskStatsFile, readTime):
         return diskList
     except:
         print("Error occurred while parsing diskstat file")
-
+        return []
         
 def fetchAll(): 
     """
@@ -53,7 +52,6 @@ def fetchAll():
     Returns:
         list: A list of dictionaries holding disk/block read/write per disk.
     """
-
     readTime = time.time()    
     diskStatsFile = readFile("/proc/diskstats")
 

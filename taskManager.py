@@ -1,11 +1,10 @@
 import time
 import memStats
 import diskStats
-#import cpuStats
+import cpuStats
 #import processStats
 #import netStats
 #import connStats
-#import os
 
 TIME_INTERVAL = None
 
@@ -21,10 +20,16 @@ try:
     while(True):
         time.sleep(TIME_INTERVAL)
 
-        print("\nMEMORY:")
+        """print("\nMEMORY:")
         memStats.printAll()
+        
+
         print("\nDisk:")
         diskStats.printAll()
+        """
+
+        print("\nCPU:")
+        cpuStats.printAll()
         
         print("\n-----------------------------\n")
 except KeyboardInterrupt:
