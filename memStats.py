@@ -6,9 +6,18 @@ import re
 import time
 from helperFunctions import readFile, round2, BasicGauge
 
-memAvail = BasicGauge("memAvail")
+memUsed = BasicGauge("memUsed")
 
-memTotal = 0
+memTotal = None
+
+def getMemTotal():
+    
+    global memTotal
+    
+    if memTotal:
+        return memTotal
+    else:
+        return 0
 
 def parseInfo(memFile, readTime):  
     """
@@ -20,33 +29,33 @@ def parseInfo(memFile, readTime):
     Returns 
         list: A list that holds the available memory as a BasicGauge object, total memory in MB, and the memory utilization in percentage.
 
-    """
-    # TODO: you only need to do this once because the size of memory doesn't dynamically change 
-    try:
-        # get the MemTotal value and convert it to MB from kB
-        memTotal = float(re.findall(r'MemTotal: .*', memFile)[0].split(" ")[-2])
-        memTotal = memTotal/1024
-    except:
-        print("Error: Unable to retrieve MemTotal")
-        memTotal = 0
-        
+    """ 
+    global memTotal
+    if not memTotal: 
+        try:
+            # get the MemTotal value and convert it to MB from kB
+            memTotal = float(re.findall(r'MemTotal: .*', memFile)[0].split(" ")[-2])
+            memTotal = memTotal/1024
+        except:
+            print("Error: Unable to retrieve MemTotal")
+            memTotal = None 
+
     try:
         # get the MemAvailable value and convert it to MB from kB
         avail = float(re.findall(r'MemAvailable: .*', memFile)[0].split(" ")[-2])
-        avail = avail/1024
-
-        memAvail.updateAll(avail, readTime)
+        avail = avail/1024 
+        memUsed.updateAll(memTotal-avail, readTime)
     except: 
         print("Error: Unable to retrieve memAvail")
     
     try:
-        # calculate memory utilization
-        memUtil = round2((memAvail.calculateAverage()/memTotal)*100)
+        # calculate memory utilization during the time interval
+        memUtil = round2((memUsed.calculateAverage()/memTotal)*100)
     except:
         print("Error: Unable to calculate memUtil")
         memUtil = 0
-
-    return [memTotal, memAvail, memUtil] 
+        
+    return [memTotal, memUsed, memUtil] 
 
 
 def fetchAll():
@@ -65,8 +74,8 @@ def fetchAll():
         return None 
 
 def printAll():
-    for i in fetchAll():
-        print(i)
+    memTotal, memUsed, memUtil = fetchAll()
+    print("Util: {}%".format(memUtil))
 
 # initialize the memInfo Dictionary
 fetchAll()

@@ -81,7 +81,7 @@ class BasicGauge:
     def __str__(self):
         avg = self.calculateAverage()
 
-        msg = "Name: {}\n Value\tprev:{}\tcurr:{}\tutil:{}/s\n Read Time\tprev:{}\tcurr:{}\n".format(
+        msg = "Name: {}\n Value\tprev:{}\tcurr:{}\tavg:{}/s\n Read Time\tprev:{}\tcurr:{}\n".format(
             self.name, 
             self.value["prev"],
             self.value["curr"], 

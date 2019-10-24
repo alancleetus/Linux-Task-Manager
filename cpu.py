@@ -6,6 +6,7 @@ class Cpu:
         self.sysMode = {"prev":0, "curr":0}
         self.idleMode = {"prev":0, "curr":0} 
         self.time = {"prev":0, "curr":0}
+        self.sysWideTime = 0
 
     def updateUserMode(self, userMode):
         self.userMode["prev"] = self.userMode["curr"]
@@ -29,17 +30,26 @@ class Cpu:
         self.updateIdleMode(idleMode)
         self.updateTime(time)
 
+    def setSysWideTime(self, time):        
+        self.sysWideTime = time
+
     def calculateUtilization(self):
-        
         delta_userMode = int(self.userMode["curr"]) - int(self.userMode["prev"])
         delta_sysMode = int(self.sysMode["curr"]) - int(self.sysMode["prev"])
         delta_idleMode = int(self.idleMode["curr"]) - int(self.idleMode["prev"])
 
         sysWideTime = delta_idleMode + delta_sysMode + delta_userMode
+        self.setSysWideTime(sysWideTime)
         
-        userModeUtil = (delta_userMode/sysWideTime)*100
-        sysModeUtil = (delta_sysMode/sysWideTime)*100
-        totalUtil = (delta_sysMode+delta_userMode)/sysWideTime *100
+        userModeUtil = 0
+        sysModeUtil = 0
+        totalUtil = 0
+        try:
+            userModeUtil = (delta_userMode/sysWideTime)*100
+            sysModeUtil = (delta_sysMode/sysWideTime)*100
+            totalUtil = ((delta_sysMode+delta_userMode)/sysWideTime) *100
+        except ZeroDivisionError:
+            pass
         
         return {"userMode":userModeUtil, "sysMode":sysModeUtil,"total":totalUtil}
 
@@ -52,7 +62,7 @@ class Cpu:
     def __str__(self):
         util = self.calculateUtilization()
 
-        msg = "Name: {}\n User Mode\tprev:{}\tcurr:{}\tutil:{}%\n Sys Mode\tprev:{}\tcurr:{}\tutil:{}%\n Idle Mode\tprev:{}\tcurr:{}\n total util:{}%\n Read Time\tprev:{}\tcurr:{}\n".format(
+        msg = "Name: {}\n User Mode\tprev:{}\tcurr:{}\tutil:{}%\n Sys Mode\tprev:{}\tcurr:{}\tutil:{}%\n Idle Mode\tprev:{}\tcurr:{}\n total util:{}%\n Read Time\tprev:{}\tcurr:{}\n CPU SysWideTime:{}\n".format(
             self.name, 
             self.userMode["prev"],
             self.userMode["curr"], 
@@ -64,7 +74,8 @@ class Cpu:
             self.idleMode["curr"], 
             round2(util["total"]),
             round2(self.time["prev"]),
-            round2(self.time["curr"])          
+            round2(self.time["curr"]),
+            self.sysWideTime          
         )
 
         return msg

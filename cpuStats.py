@@ -7,11 +7,12 @@ from helperFunctions import readFile, round2, BasicCounter
 cpuList=[]
 intr = BasicCounter("interrupts")
 ctxt = BasicCounter("context switches")
-
+SysWideTime = None
 def initCpuList(statFile): 
     """
     This function only runs once to initialize the cpuList. It creates placeholder Cpu objects for the cpuList so they can be used to store all cpu information later in the code. 
     """
+    global cpuList
     statsAllCpu = re.findall(r'cpu\d+.* ', statFile)
     for statsForOneCpu in statsAllCpu:
         cpuCols = statsForOneCpu.split()
@@ -20,6 +21,8 @@ def initCpuList(statFile):
         cpuList.append(tempCpu)
 
 def getIntrAndCtxt(statFile, readTime):
+    global intr
+    global ctxt
     intrInfoRow = re.findall(r'intr .*', statFile)[0]
     intr.updateAll(int(intrInfoRow.split(" ")[1]), readTime)
 
@@ -37,6 +40,7 @@ def parseInfo(statFile, readTime):
     Returns:
         list: Returns a list of Cpu objects for each cpu on the system.
     """
+    global cpuList
     try:
         statsAllCpu = re.findall(r'cpu\d+.* ', statFile)
         for statsForOneCpu in statsAllCpu:
@@ -60,84 +64,30 @@ def fetchAll():
 
     if statFile:
         getIntrAndCtxt(statFile, readTime)  
-        return [intr, ctxt, parseInfo(statFile, readTime)]
+        return [intr, ctxt, parseInfo(statFile, readTime), getSystemWideCpuTime()]
     else:
         print("Error: Unable to retrieve cpu information")
         return None 
 
 
 def printAll():
-    for eachCpu in fetchAll():
-        print(eachCpu)
+    for eachValue in fetchAll():
+        print(eachValue) 
+    
+     
+def getSystemWideCpuTime():
+    """
+    This value is to be used in the procStats.py module to calculate per process cpu utilization.
+    """
+    global SysWideTime
+    sum = 0
+    count = 0
+    global cpuList
+    for eachCpu in cpuList: 
+        sum+=eachCpu.sysWideTime
+        count+=1
+    SysWideTime = sum/count
+    return SysWideTime
 
 initCpuList(readFile("/proc/stat"))
 fetchAll()
-
-"""
-sysWideTime = 0
-
-intrData = {"prev":0, "curr":0}
-ctxtData = {"prev":0, "curr":0}
-cpuData = {"prev":{}, "curr":{}}
-
-lastIntrReadTime = {"prev":0,"curr":0}
-lastCtxtReadTime = {"prev":0,"curr":0}
-lastCpuReadTime = {"prev":0,"curr":0}
- 
-##########################################################
-                    #######INTR INFO#########
-########################################################## 
-def getIntr(): 
-    lastIntrReadTime["prev"] = lastIntrReadTime["curr"]
-    lastIntrReadTime["curr"] = time.time()
-    statFile = readFile("/proc/stat")
-
-    intrData["prev"] = intrData["curr"]
-    intrInfoRow = re.findall(r'intr .*', statFile)[0]
-    intrData["curr"] = int(intrInfoRow.split(" ")[1])
-
-    return intrData["curr"]
-
-def getIntrFreq():
-    getIntr()
-
-    timeInterval = lastIntrReadTime["curr"]-lastIntrReadTime["prev"]
-    freq = (intrData["curr"]-intrData["prev"])/timeInterval
-    return freq
-
-##########################################################
-                    #######CTXT INFO#########
-##########################################################
-def getCtxt(): 
-    lastCtxtReadTime["prev"] = lastCtxtReadTime["curr"]
-    lastCtxtReadTime["curr"] = time.time() 
-    statFile = readFile("/proc/stat")
-
-    ctxtData["prev"] = ctxtData["curr"]
-    ctxtInfoRow = re.findall(r'ctxt .*', statFile)[0]
-    ctxtData["curr"] = int(ctxtInfoRow.split(" ")[1]) 
-    return ctxtData["curr"]
-    
-
-def getCtxtFreq(): 
-    getCtxt() 
-    timeInterval = lastCtxtReadTime["curr"]-lastCtxtReadTime["prev"]
-    freq = (ctxtData["curr"]-ctxtData["prev"])/timeInterval
-    return freq
-
-##########################################################
-             #######My Functions#########
-##########################################################
-def fetchAll(): 
-    return [getIntrFreq(), getCtxtFreq(), getCpuUtil()]
- 
-def getSystemWideCpu():
-    return sysWideTime()
-    
-def intializeValues():
-    getIntr()
-    getCtxt()
-    getCpus()
-
-intializeValues()
-"""

@@ -2,7 +2,7 @@ import time
 import memStats
 import diskStats
 import cpuStats
-#import processStats
+import processStats
 #import netStats
 #import connStats
 
@@ -19,17 +19,20 @@ while not TIME_INTERVAL:
 try:
     while(True):
         time.sleep(TIME_INTERVAL)
-        """
-        print("\nMEMORY:")
-        memStats.printAll()
         
-
+        """print("\nMEMORY:")
+        memStats.printAll()
+       
         print("\nDisk:")
         diskStats.printAll()
-        
-
+        """
         print("\nCPU:")
-        cpuStats.printAll()
+        cpuStats.printAll() 
+        """
+        print("\nProcess:")
+        processStats.setSysWideCpuTime(cpuStats.getSystemWideCpuTime())        
+        processStats.setPhyMemTotal(int(memStats.getMemTotal()))
+        processStats.printAll() 
         """
         print("\n-----------------------------\n")
 except KeyboardInterrupt:
