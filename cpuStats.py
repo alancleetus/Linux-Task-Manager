@@ -54,7 +54,7 @@ def parseInfo(statFile, readTime):
 
 def fetchAll(): 
     """
-    This function reads /proc/stat and sends it to parseInfo() to be processed.
+    This function reads /proc/stat and sends the content to parseInfo() to be processed.
 
     Returns:
         list: A list of dictionaries holding information for each cpu.

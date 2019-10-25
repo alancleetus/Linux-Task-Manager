@@ -20,20 +20,20 @@ try:
     while(True):
         time.sleep(TIME_INTERVAL)
         
-        """print("\nMEMORY:")
+        print("\nMEMORY:")
         memStats.printAll()
        
         print("\nDisk:")
         diskStats.printAll()
-        """
+        
         print("\nCPU:")
         cpuStats.printAll() 
-        """
+        
         print("\nProcess:")
         processStats.setSysWideCpuTime(cpuStats.getSystemWideCpuTime())        
         processStats.setPhyMemTotal(int(memStats.getMemTotal()))
         processStats.printAll() 
-        """
+        
         print("\n-----------------------------\n")
 except KeyboardInterrupt:
     print("\nexiting...")
