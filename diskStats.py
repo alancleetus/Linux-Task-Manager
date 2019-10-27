@@ -13,6 +13,7 @@ def initDiskList(diskStatsFile):
     """
     This function only runs once to initialize the diskList. It creates placeholder Disk objects for the diskList so they can be used to store all disk information later in the code. 
     """
+    global diskList
     statsAllDisks = re.findall(r'.*sd[a-z] .*', diskStatsFile)
     for statsForOneDisk in statsAllDisks:
         diskCols = statsForOneDisk.split()
@@ -31,6 +32,7 @@ def parseInfo(diskStatsFile, readTime):
     Returns:
         list: Returns a list of Disk objects for each disk on the system.
     """
+    global diskList
     try:
         statsAllDisks = re.findall(r'.*sd[a-z] .*', diskStatsFile)
         for statsForOneDisk in statsAllDisks:

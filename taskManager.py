@@ -3,7 +3,7 @@ import memStats
 import diskStats
 import cpuStats
 import processStats
-#import netStats
+import netStats
 #import connStats
 
 TIME_INTERVAL = None
@@ -20,7 +20,7 @@ try:
     while(True):
         time.sleep(TIME_INTERVAL)
         
-        print("\nMEMORY:")
+        """print("\nMEMORY:")
         memStats.printAll()
        
         print("\nDisk:")
@@ -33,7 +33,9 @@ try:
         processStats.setSysWideCpuTime(cpuStats.getSystemWideCpuTime())        
         processStats.setPhyMemTotal(int(memStats.getMemTotal()))
         processStats.printAll() 
-        
+        """
+
+        netStats.printAll()
         print("\n-----------------------------\n")
 except KeyboardInterrupt:
     print("\nexiting...")
