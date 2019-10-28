@@ -1,3 +1,4 @@
+import json
 from helperFunctions import calculateCounterFreq, round2
 class Cpu:
     def __init__(self, name):
@@ -82,3 +83,15 @@ class Cpu:
 
     def __repr__(self):
         return str(self)
+
+    def toJSON(self):
+        util = self.calculateUtilization()
+
+        data = {}
+        data['name'] = self.name
+        data['userMode'] = round2(util["userMode"])
+        data['sysMode'] = round2(util["sysMode"])
+        data['totalUtil'] = round2(util["total"])
+
+        json_data = json.dumps(data)
+        return json_data

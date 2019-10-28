@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Task Manager</title>
+    <script type="text/javascript" src="eel.js"></script>
+    <script type="text/javascript" src="./js/jquery-3.3.1.min.js"></script>
+
+    <script type="text/javascript" src="./js/datatables.min.js"></script>
+    <link rel="stylesheet" href="./css/datatables.min.css" />
+
+    <link rel="stylesheet" href="./css/uikit.min.css" />
+    <script src="./js/uikit.min.js"></script>
+    <script src="./js/uikit-icons.min.js"></script>
+
+    <script type="text/javascript" src="./js/myscripts.js"></script>
+
+</head>
+
+<body>
+    <div class="uk-container">
+        <input placeholder="Enter Time Interval Here..." />
+
+        <!-- Tabs starts here-->
+        <ul class="uk-tab" data-uk-tab="{connect:'#content-tab'}">
+            <li><a href="">CPU</a></li>
+            <li><a href="">DISK</a></li>
+            <li><a href="">MEMORY</a></li>
+            <li><a href="">NETWORK</a></li>
+            <li><a href="">PROCESSES</a></li>
+            <li><a href="">TCP</a></li>
+            <li><a href="">UDP</a></li>
+        </ul>
+
+        <div id="content-tab" class="uk-switcher uk-margin">
+            <div id="cpu-stats">
+                <h1>CPU STATS</h1>
+                <p><span id="intr-val">_</span> interrupts/sec</p>
+                <p><span id="ctxt-val">_</span> context switches/sec</p>
+                <hr />
+            </div>
+            <div id="disk-stats">
+                <h1>DISK STATS</h1>
+                <div><span id="disks-val">_</span></div>
+            </div>
+            <div id="mem-stats">
+                <h1>MEMORY STATS</h1>
+                <p>Memory Utilization: <span id="memoryUtilization-val">_</span>% per sec</p>
+                <p>Total Memory: <span id="memoryTotal-val">_</span> MB</p>
+                <p>Memory Available: <span id="memoryAvailable-val">_</span> MB</p>
+                <hr />
+            </div>
+            <div id="network-stats">
+                <h1>NETWORK STATS</h1>
+                <div><span id="network-val">_</span></div>
+            </div>
+            <div id="processes-stats">
+                <h1>PROCESSES STATS</h1>
+                <div>
+                    <table class="uk-table uk-table-striped" id="process-table">
+                        <thead>
+                            <tr>
+                                <th>PID</th>
+                                <th>Name</th>
+                                <th>User Name</th>
+                                <th>Inode Number</th>
+                                <th>User Time</th>
+                                <th>Sys Time</th>
+                                <th>CPU Util</th>
+                                <th>Virtual Memory Util</th>
+                                <th>Physical Memory Util</th>
+                            </tr>
+                        </thead>
+                        <tbody id="process-table-body">
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div id="tcp-connection-stats">
+                <h1>TCP STATS</h1>
+                <div>
+                    <p id="tcp-val">_</p>
+                    <table class="uk-table uk-table-striped" id="tcp-table">
+                        <thead>
+                            <tr>
+                                <th>Conn ID</th>
+                                <th>UID</th>
+                                <th>User Name</th>
+                                <th>Program</th>
+                                <th>Src IP:Port</th>
+                                <th>Src Hostname</th>
+                                <th>Dest IP:Port</th>
+                                <th>Dest Hostname</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tcp-table-body">
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div id="udp-connection-stats">
+                    <h1>UDP STATS</h1>
+                    <div>
+                        <table class="uk-table uk-table-striped" id="udp-table">
+                            <thead>
+                                <tr>
+                                    <th>Conn ID</th>
+                                    <th>UID</th>
+                                    <th>User Name</th>
+                                    <th>Program</th>
+                                    <th>Src IP:Port</th>
+                                    <th>Src Hostname</th>
+                                    <th>Dest IP:Port</th>
+                                    <th>Dest Hostname</th>
+                                </tr>
+                            </thead>
+                            <tbody id="udp-table-body">
+    
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+        </div>
+
+    </div>
+</body>
+
+</html>

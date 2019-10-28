@@ -1,3 +1,4 @@
+import json
 from helperFunctions import round2
 class NetworkDevice:
     def __init__(self, name):
@@ -75,3 +76,14 @@ class NetworkDevice:
 
     def __repr__(self):
         return str(self)
+       
+    def toJSON(self): 
+        data = {}
+        data['name'] = self.name
+        data['bytesIn'] = round2(self.calculateDelta(self.bytesIn))
+        data['bytesOut'] = round2(self.calculateDelta(self.bytesOut))
+        data['networkBandwidth'] = round2(self.calculateAverage(self.networkBandwidth))
+        data['networkUtilization'] = round2(self.calculateUtilizationPerSecond())
+        
+        json_data = json.dumps(data)
+        return json_data

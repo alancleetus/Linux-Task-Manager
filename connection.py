@@ -1,3 +1,4 @@
+import json
 class Connection:
     def __init__(self, id):
         self.id = id
@@ -57,3 +58,18 @@ class Connection:
 
     def __repr__(self):
         return str(self)
+
+    def toJSON(self): 
+        data = {}
+        data['id'] = self.id
+        data['username'] = self.username
+        data['uid'] = self.uid
+        data['program'] = self.program 
+        data['srcIP'] = self.src["ip"] 
+        data['srcPort'] = self.src["port"] 
+        data['srcHostname'] = self.src["hostname"]
+        data['destIP'] = self.dest["ip"] 
+        data['destPort'] = self.dest["port"] 
+        data['destHostname'] = self.dest["hostname"]
+        json_data = json.dumps(data)
+        return json_data

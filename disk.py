@@ -1,3 +1,4 @@
+import json
 from helperFunctions import calculateCounterFreq, round2
 class Disk:
     def __init__(self, name):
@@ -78,4 +79,17 @@ class Disk:
         return msg
 
     def __repr__(self):
-        return str(self)
+        return str(self) 
+        
+    def toJSON(self):
+        freqs = self.calculateFrequencies()      
+
+        data = {}
+        data['name'] = self.name
+        data['diskReads'] = round2(freqs["diskRead"])
+        data['diskWrites'] = round2(freqs["diskWrite"])
+        data['blockReads'] = round2(freqs["blockRead"])
+        data['blockWrites'] = round2(freqs["blockWrite"])
+
+        json_data = json.dumps(data)
+        return json_data

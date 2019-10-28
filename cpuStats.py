@@ -8,6 +8,7 @@ cpuList=[]
 intr = BasicCounter("interrupts")
 ctxt = BasicCounter("context switches")
 SysWideTime = None
+
 def initCpuList(statFile): 
     """
     This function only runs once to initialize the cpuList. It creates placeholder Cpu objects for the cpuList so they can be used to store all cpu information later in the code. 

@@ -2,6 +2,7 @@ import os
 import re
 import pwd
 import time
+import json
 import subprocess
 from stat import *
 from process import Process 
@@ -194,6 +195,31 @@ def fetchAll():
         print("Error: FetchAll error in processStat.py")
         return {}
 
+
+def toJSON():
+    global sysWideCpuTime
+    global phyMemTotal
+    global vMemTotal
+
+    dataList = []
+
+    for pid, eachProcess in fetchAll().items(): 
+        cpu = eachProcess.calculateCpuUtilization(sysWideCpuTime)
+        data = {}    
+        data['pid'] = eachProcess.pid
+        data['name'] = eachProcess.name
+        data['userName'] = eachProcess.userName
+        data['inodeNumber'] = eachProcess.inodeNumber
+        data['userMode'] = cpu["userMode"]
+        data['sysMode'] = cpu["sysMode"]
+        data['total'] = cpu["total"]
+        data['vMemUtil'] = eachProcess.calculateVmemUtil(vMemTotal)
+        data['phyMemUtil'] = eachProcess.calculatePhyMemUtil(phyMemTotal)
+    
+        dataList.append(data)
+    
+    json_data = json.dumps(dataList)
+    return json_data
 
 def printAll():
     global sysWideCpuTime
