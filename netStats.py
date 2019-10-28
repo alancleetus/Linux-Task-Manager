@@ -23,7 +23,7 @@ def getNetworkBandwidth(deviceName):
             bandwidth = re.sub(r'\D*','',speed)  #in Mb/s
             networkBandwidths[deviceName] = int(bandwidth)*125000 #Mb/s to Bytes/s
 
-            print("Updating network bandwidth for",deviceName, "to", networkBandwidths[deviceName])
+            #print("Updating network bandwidth for",deviceName, "to", networkBandwidths[deviceName])
             return networkBandwidths[deviceName]
         except:
             print("Error: Unable to get network interface speed")
@@ -42,7 +42,6 @@ def parseInfo(devFile, readTime):
     global networkDeviceList
     try:
         for eachDev in devFile[2:-1]:
-            #print(eachDev.split())
             deviceCols = eachDev.split()
             deviceName = deviceCols[0][:-1]
 

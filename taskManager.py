@@ -20,7 +20,7 @@ try:
     while(True):
         time.sleep(TIME_INTERVAL)
         
-        """print("\nMEMORY:")
+        print("\nMEMORY:")
         memStats.printAll()
        
         print("\nDisk:")
@@ -33,8 +33,8 @@ try:
         processStats.setSysWideCpuTime(cpuStats.getSystemWideCpuTime())        
         processStats.setPhyMemTotal(int(memStats.getMemTotal()))
         processStats.printAll() 
-        """
 
+        print("\nNetwork:")
         netStats.printAll()
         print("\n-----------------------------\n")
 except KeyboardInterrupt:

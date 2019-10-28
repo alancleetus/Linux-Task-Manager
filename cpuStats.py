@@ -59,21 +59,28 @@ def fetchAll():
     Returns:
         list: A list of dictionaries holding information for each cpu.
     """
+    global intr, ctxt, cpuList, SysWideTime
     readTime = time.time()    
     statFile = readFile("/proc/stat")
 
     if statFile:
-        getIntrAndCtxt(statFile, readTime)  
-        return [intr, ctxt, parseInfo(statFile, readTime), getSystemWideCpuTime()]
+        getIntrAndCtxt(statFile, readTime)
+        parseInfo(statFile, readTime)
+        getSystemWideCpuTime()
+        return [intr, ctxt, cpuList, SysWideTime]
     else:
         print("Error: Unable to retrieve cpu information")
         return None 
 
 
 def printAll():
-    for eachValue in fetchAll():
-        print(eachValue) 
-    
+    output = fetchAll()
+
+    print(output[0])
+    print(output[1])
+    print(output[2])
+    print("\nSystem wide cpu average:", output[3])
+
      
 def getSystemWideCpuTime():
     """

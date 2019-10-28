@@ -37,10 +37,13 @@ class NetworkDevice:
 
     def calculateUtilizationPerSecond(self):
         try:
+            if self.networkBandwidth["prev"] == 0:
+                return 0
+
             timeInterval = self.calculateDelta(self.time)
             bytesInPerSec = (self.calculateDelta(self.bytesIn)) / timeInterval
             bytesOutPerSec = (self.calculateDelta(self.bytesOut)) / timeInterval
-            print("Calc:", timeInterval, bytesInPerSec, bytesOutPerSec, self.calculateAverage(self.networkBandwidth))
+            #print("Calc:", timeInterval, bytesInPerSec, bytesOutPerSec, self.calculateAverage(self.networkBandwidth))
             utilPerSec = (bytesInPerSec+bytesOutPerSec)/self.calculateAverage(self.networkBandwidth)
             return utilPerSec* 100
         except:
@@ -55,7 +58,7 @@ class NetworkDevice:
 
     def __str__(self):
 
-        msg = "Name: {}\n Bytes in\tprev:{}\tcurr:{}\n Bytes out\tprev:{}\tcurr:{}\nNetwork Bandwidth\tprev:{}\tcurr:{}\n Utilization:\t{}% per sec\n Read Time\tprev:{}\tcurr:{}\n".format(
+        msg = "Name: {}\n Bytes in\tprev:{}\tcurr:{}\n Bytes out\tprev:{}\tcurr:{}\n Network Bandwidth\tprev:{}\tcurr:{}\n Utilization:\t{}% per sec\n Read Time\tprev:{}\tcurr:{}\n".format(
             self.name,
             self.bytesIn["prev"],
             self.bytesIn["curr"],
