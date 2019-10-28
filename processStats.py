@@ -88,9 +88,9 @@ def getAllPids():
         print("Error: Unable to get all PIDs")
 
 
-def getPID(inodeNumber):
+def getInodeDict():
     global inodeDict
-    return inodeDict[inodeNumber]
+    return inodeDict
 
 
 def parseInodeNumber(pid): 

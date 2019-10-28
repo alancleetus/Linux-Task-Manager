@@ -4,7 +4,7 @@ import diskStats
 import cpuStats
 import processStats
 import netStats
-#import connStats
+import tcpUdpConnStats
 
 TIME_INTERVAL = None
 
@@ -20,7 +20,7 @@ try:
     while(True):
         time.sleep(TIME_INTERVAL)
         
-        print("\nMEMORY:")
+        """print("\nMEMORY:")
         memStats.printAll()
        
         print("\nDisk:")
@@ -28,14 +28,18 @@ try:
         
         print("\nCPU:")
         cpuStats.printAll() 
-        
+        """
         print("\nProcess:")
         processStats.setSysWideCpuTime(cpuStats.getSystemWideCpuTime())        
         processStats.setPhyMemTotal(int(memStats.getMemTotal()))
         processStats.printAll() 
 
-        print("\nNetwork:")
+        """print("\nNetwork:")
         netStats.printAll()
+        """
+        print("\nTCP & UDP Connection:")
+        tcpUdpConnStats.updateInodeDict(processStats.getInodeDict())
+        tcpUdpConnStats.printAll()
         print("\n-----------------------------\n")
 except KeyboardInterrupt:
     print("\nexiting...")
