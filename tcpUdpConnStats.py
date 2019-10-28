@@ -109,7 +109,8 @@ def countEstablished(tcpFile):
         count = 0
         for eachConn in tcpFile.split("\n")[1:-2]:
             eachConnCols = eachConn.split()
-            connState = eachConnCols[0][:-1]
+            connState = eachConnCols[3]
+            #print("ConnState:",connState)
             if connState == "01":
                 count+=1
         return count
