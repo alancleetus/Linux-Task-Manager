@@ -69,16 +69,20 @@ class Process:
 
     def calculateVmemUtil(self, vMemTotal):
         try:
-            delta_vmem = int(self.vmem["curr"]) - int(self.vmem["prev"]) 
-            totalUtil = (delta_vmem/int(vMemTotal))*100         
+            #delta_vmem = int(self.vmem["curr"]) - int(self.vmem["prev"]) 
+            delta_vmem = int(self.vmem["curr"])
+            totalUtil = (delta_vmem/int(vMemTotal))*100    
+            #print(delta_vmem, vMemTotal, totalUtil)     
             return round2(totalUtil)
         except:
+            #print("Error calculation vmem", vMemTotal, self.vmem)
             return 0
 
     def calculatePhyMemUtil(self, phyMemTotal):
         try:    
-            delta_vmem = int(self.rss["curr"]) - int(self.rss["prev"]) 
-            totalUtil = (delta_vmem/int(phyMemTotal))*100
+            #delta_phyMem = int(self.rss["curr"]) - int(self.rss["prev"]) 
+            delta_phyMem = int(self.rss["curr"])
+            totalUtil = (delta_phyMem/int(phyMemTotal))*100
             return round2(totalUtil)
         except:
             return 0

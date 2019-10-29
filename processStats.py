@@ -34,11 +34,14 @@ def setPhyMemTotal(valInMB):
         int: total number of physical memory pages
    """
     global phyMemTotal
-    if phyMemTotal:
-        return phyMemTotal
-    else:
-        phyMemTotal = valInMB*1024*1024/int(pageSize) #convert to bytes then to total number of pages
-        return phyMemTotal
+    try:
+        if phyMemTotal ==None:
+            phyMemTotal = (int(valInMB)*1024*1024)/int(pageSize) #convert to bytes then to total number of pages
+            #print("Phy memtotal = ", phyMemTotal)
+    except:
+        pass 
+
+    return phyMemTotal
 
 def getPageSize():
     global pageSize
@@ -60,21 +63,20 @@ def calculateVmemTotal():
           int: total size of virutal memory in bytes
     """
     global vMemTotal
-    
-    if vMemTotal:
-        return vMemTotal
-    else:
-        try:
+    try:
+        if vMemTotal ==None:
             architecture = subprocess.check_output(["uname","-m"]).decode("utf-8")
             if "64" in architecture:
                 vMemTotal = 2**64
             else:
                 vMemTotal = 2**32 
-        except:
-            print("Error: getting vmem total")
+        #print(vMemTotal)
+    except:
+        print("Error: getting vmem total")
     
     return vMemTotal
 
+calculateVmemTotal()
 
 def getAllPids():
     """
@@ -223,8 +225,7 @@ def toJSON():
         data['sysMode'] = cpu["sysMode"]
         data['total'] = cpu["total"]
         data['vMemUtil'] = eachProcess.calculateVmemUtil(vMemTotal)
-        data['phyMemUtil'] = eachProcess.calculatePhyMemUtil(phyMemTotal)
-    
+        data['phyMemUtil'] = eachProcess.calculatePhyMemUtil(phyMemTotal)       
         dataList.append(data)
     
     json_data = json.dumps(dataList)
@@ -250,7 +251,7 @@ def printAll():
             cpu["total"], 
             eachProcess.calculateVmemUtil(vMemTotal),
             eachProcess.calculatePhyMemUtil(phyMemTotal)))
- 
+        
  
     #print(sysWideCpuTime)
         
