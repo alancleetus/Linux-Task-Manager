@@ -29,7 +29,8 @@ def convertIP(hexIP):
         return ipDict[hexIP]
 
     except socket.herror:
-        ipDict[hexIP] = socket.inet_ntoa(bytes.fromhex(hexIP))
+        #ipDict[hexIP] = socket.inet_ntoa(bytes.fromhex(hexIP))
+        ipDict[hexIP] = ""
         print("Error: unable to resolve ip:",  socket.inet_ntoa(bytes.fromhex(hexIP)))
         return ipDict[hexIP]
 

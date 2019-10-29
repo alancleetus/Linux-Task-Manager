@@ -183,7 +183,7 @@ $(document).ready(function() {
     
     $("#tcp-table").DataTable();
     $("#udp-table").DataTable();
-    $("#process-table").DataTable();
+    $("#process-table").DataTable({ "order": [[ 6, "desc" ]]});
 });
 
 function changeTimeInterval(selectObj)

@@ -130,9 +130,7 @@ def parseInfo(pid, statFile, statusFile, readTime):
             userMode = statFile[13]
             sysMode = statFile[14]
             vmem = statFile[22]
-            rss = statFile[23]
-
-            print( statFile, name)
+            rss = statFile[23] 
         except:
             print("Error: parsing /proc/{}/stat file".format(pid))
             return None
@@ -256,4 +254,3 @@ def printAll():
  
     #print(sysWideCpuTime)
         
-fetchAll()
