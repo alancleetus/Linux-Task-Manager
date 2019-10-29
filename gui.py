@@ -5,7 +5,7 @@ import cpuStats
 import processStats
 import netStats
 import tcpUdpConnStats
-from helperFunctions import round2
+from helperFunctions import round2 
 
 eel.init('web')
 
@@ -15,6 +15,7 @@ TIME_INTERVAL = 1
 def setTimeInterval(timeInterval):
     global TIME_INTERVAL
     TIME_INTERVAL = float(timeInterval)
+    print("Changing time interval to", TIME_INTERVAL)
 
 def updateDataThread():
     try:
@@ -68,7 +69,7 @@ def updateDataThread():
             for eachCpu in cpuList:
                 cpuDictList.append(eachCpu.toJSON())   
 
-            #eel.consoleLog(cpuDictList)
+            eel.setCpuStats(cpuDictList)
 
 
             """
@@ -130,8 +131,8 @@ def updateDataThread():
     except KeyboardInterrupt:
         print("Closing")
 
-
 eel.spawn(updateDataThread)
-myOptions = {'size': (600, 400), "block": "False", "mode":"firefox"}
+ 
+eel.start('main.html', mode="none")
 
-eel.start('main.html')
+

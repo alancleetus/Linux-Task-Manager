@@ -95,7 +95,7 @@ def getInodeDict():
 
 
 def parseInodeNumber(pid): 
-    inodeVal = -1
+    inodeVal = ""
     try:       
         path = "/proc/"+pid+"/fd"
         inner = os.listdir(path)  

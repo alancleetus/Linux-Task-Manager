@@ -4,7 +4,7 @@ class Process:
         self.pid = pid
         self.name = ""
         self.userName = ""
-        self.inodeNumber = -1
+        self.inodeNumber = ""
         self.userMode = {"prev":0, "curr":0}
         self.sysMode = {"prev":0, "curr":0}
         self.vmem = {"prev":0, "curr":0}

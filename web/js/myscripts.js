@@ -33,9 +33,6 @@ function setMemoryUtilization(html) {
     document.querySelector("#memoryUtilization-val").innerHTML = html;
 }
 
-
-
-
 eel.expose(setDiskStats)
 function setDiskStats(data) {
     console.log("Disk Stats:"+data);
@@ -54,6 +51,24 @@ function setDiskStats(data) {
     html+="</div>"
     
     document.querySelector("#disks-val").innerHTML = html;
+}
+
+eel.expose(setCpuStats)
+function setCpuStats(data) {
+    console.log("Cpu Stats:"+data);
+    html=""
+    for(let i = 0; i<data.length; i++)
+    { 
+        cpu = JSON.parse(data[i])
+        html+="<p>"+cpu["name"]+"</p>"
+        html+="<p>Total Utilization: "+cpu["totalUtil"]+"%</p>" 
+        html+="<p>User Mode: "+cpu["userMode"]+"%</p>"
+        html+="<p>Sys Mode: "+cpu["sysMode"]+"%</p>"
+        html+="<hr />"
+
+    } 
+    
+    document.querySelector("#cpu-val").innerHTML = html;
 }
 
 eel.expose(setNetworkStats)
@@ -170,3 +185,35 @@ $(document).ready(function() {
     $("#udp-table").DataTable();
     $("#process-table").DataTable();
 });
+
+function changeTimeInterval(selectObj)
+{
+    eel.setTimeInterval(selectObj.value)
+}
+/************************* */
+var totalMemory = 0;
+var memoryDp = [
+    { y: 519960, name: "Used", color: "#E7823A" },
+    { y: 363040, name: "Available", color: "#546BC1" }
+]
+var memoryData = {
+	"Used Vs Available Memory": [{
+		cursor: "pointer",
+		innerRadius: "75%",
+		legendMarkerType: "square",
+		name: "Used Vs Available Memory",
+		radius: "100%",
+		showInLegend: true,
+		startAngle: 90,
+		type: "doughnut",
+		dataPoints: memoryDp
+	}]
+};
+
+var memoryChart = new CanvasJS.Chart("memoryChartContainer",{
+    title:{
+        text:"Used Vs Available Memory"
+    }
+});
+memoryChart.options.data = visitorsData["New vs Returning Visitors"];
+chart.render();

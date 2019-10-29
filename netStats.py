@@ -52,9 +52,9 @@ def parseInfo(devFile, readTime):
                 index = networkDeviceList.index(NetworkDevice(str(deviceName)))
                 networkDeviceList[index].updateAll(int(deviceCols[1]), int(deviceCols[8]), getNetworkBandwidth(deviceName), readTime)
             except:
-                print("Adding new device", deviceName)
+                #print("Adding new device", deviceName)
                 temp_networkDevice = NetworkDevice(deviceName)
-                print(temp_networkDevice)
+                #print(temp_networkDevice)
                 temp_networkDevice.updateAll(int(deviceCols[1]), int(deviceCols[8]), getNetworkBandwidth(deviceName), readTime)
                 networkDeviceList.append(temp_networkDevice)
 
