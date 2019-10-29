@@ -117,11 +117,22 @@ def parseInfo(pid, statFile, statusFile, readTime):
     try:
         try:
             statFile = statFile.split()
-            name = statFile[1][1:-1]          
+
+            """
+            bug: if program name = (Web content)
+            split() will split  break it into two parts
+            """
+            if statFile[1][-1] != ')':
+                statFile[1] = statFile[1]+" "+statFile[2]
+                statFile.pop(2)
+
+            name = statFile[1][1:-1]         
             userMode = statFile[13]
             sysMode = statFile[14]
             vmem = statFile[22]
             rss = statFile[23]
+
+            print( statFile, name)
         except:
             print("Error: parsing /proc/{}/stat file".format(pid))
             return None
@@ -245,3 +256,4 @@ def printAll():
  
     #print(sysWideCpuTime)
         
+fetchAll()

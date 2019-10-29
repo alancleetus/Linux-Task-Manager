@@ -132,7 +132,8 @@ def updateDataThread():
         print("Closing")
 
 eel.spawn(updateDataThread)
- 
+print("On browser navigate to : localhost:8000/main.html") 
 eel.start('main.html', mode="none")
+
 
 
