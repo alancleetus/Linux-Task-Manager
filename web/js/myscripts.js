@@ -1,3 +1,17 @@
+/* COPIED FROM: https://stackoverflow.com/questions/15900485/correct-way-to-convert-size-in-bytes-to-kb-mb-gb-in-javascript*/
+function formatBytes(bytes, decimals = 2) {
+    if (bytes === 0) return '0 Bytes';
+
+    const k = 1024;
+    const dm = decimals < 0 ? 0 : decimals;
+    const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
+
+    const i = Math.floor(Math.log(bytes) / Math.log(k));
+
+    return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i];
+}
+
+
 eel.expose(consoleLog)
 function consoleLog(data) {
     console.log(data); 
@@ -5,85 +19,100 @@ function consoleLog(data) {
 
 eel.expose(setCtxt)
 function setCtxt(html) {
-    console.log("Ctxt:"+html);
-    document.querySelector("#ctxt-val").innerHTML = html;
+    //console.log("Ctxt:"+html);
+    document.querySelector("#ctxt-val").innerHTML = html.toFixed(2)+" context switches/s";
 }
 
 eel.expose(setIntr)
 function setIntr(html) {
-    console.log("Intr:"+html);
-    document.querySelector("#intr-val").innerHTML = html;
+    //console.log("Intr:"+html);
+    document.querySelector("#intr-val").innerHTML = html.toFixed(2)+" interrupts/s";
 }
 
 eel.expose(setMemoryTotal)
 function setMemoryTotal(html) {
-    console.log("Mem Total:"+html);
-    document.querySelector("#memoryTotal-val").innerHTML = html;
+    //console.log("Mem Total:"+html);
+    document.querySelector("#memoryTotal-val").innerHTML = html.toFixed(2);
 }
 
 eel.expose(setMemoryAvailable)
 function setMemoryAvailable(html) {
-    console.log("Mem Avail:"+html);
-    document.querySelector("#memoryAvailable-val").innerHTML = html;
+    //console.log("Mem Avail:"+html);
+    document.querySelector("#memoryAvailable-val").innerHTML = html.toFixed(2);
 }
 
 eel.expose(setMemoryUtilization)
 function setMemoryUtilization(html) {
-    console.log("Mem Util:"+html);
-    document.querySelector("#memoryUtilization-val").innerHTML = html;
+    //console.log("Mem Util:"+html);
+    document.querySelector("#memoryUtilization-val").innerHTML = html.toFixed(2);
+}
+
+eel.expose(setMemoryStats)
+function setMemoryStats(data){
+    //console.log(data)
+    setMemoryTotal(data[0])
+    setMemoryAvailable(data[1])
+    setMemoryUtilization(data[2])
+    updateMemChart(data[0], data[1])
 }
 
 eel.expose(setDiskStats)
 function setDiskStats(data) {
-    console.log("Disk Stats:"+data);
-    html="<div>"
+    //console.log("Disk Stats:"+data);
+    let html=""
     for(let i = 0; i<data.length; i++)
     { 
         disk = JSON.parse(data[i])
-        html+="<p>"+disk["name"]+"</p>"
-        html+="<p>Disk Reads: "+disk["diskReads"]+"/s</p>"
-        html+="<p>Disk Writes: "+disk["diskWrites"]+"/s</p>"
-        html+="<p>Block Reads: "+disk["blockReads"]+"/s</p>"
-        html+="<p>Block Writes: "+disk["blockWrites"]+"/s</p>"
-        html+="<hr />"
-
-    }
-    html+="</div>"
+        html+="<div><div class=\"uk-card uk-card-default uk-card-small uk-card-body\">"
+        html+="<h3 class=\"uk-card-title\">"+disk["name"]+"</h3>"
+        html+="<p>Disk Reads: "+disk["diskReads"].toFixed(2)+"/s</p>"
+        html+="<p>Disk Writes: "+disk["diskWrites"].toFixed(2)+"/s</p>"
+        html+="<p>Block Reads: "+disk["blockReads"].toFixed(2)+"/s</p>"
+        html+="<p>Block Writes: "+disk["blockWrites"].toFixed(2)+"/s</p>"
+        html+="</div></div>"
+    } 
     
     document.querySelector("#disks-val").innerHTML = html;
 }
 
 eel.expose(setCpuStats)
 function setCpuStats(data) {
-    console.log("Cpu Stats:"+data);
-    html=""
+    //console.log("Cpu Stats:"+data);
+    
+
+    let html=""
+    let utilData = {}
     for(let i = 0; i<data.length; i++)
     { 
         cpu = JSON.parse(data[i])
-        html+="<p>"+cpu["name"]+"</p>"
-        html+="<p>Total Utilization: "+cpu["totalUtil"]+"%</p>" 
-        html+="<p>User Mode: "+cpu["userMode"]+"%</p>"
-        html+="<p>Sys Mode: "+cpu["sysMode"]+"%</p>"
-        html+="<hr />"
+        html+="<div><div class=\"uk-card uk-card-default uk-card-small uk-card-body\">"
+        html+="<h3 class=\"uk-card-title\">"+cpu["name"]+"</h3>"
+        html+="<p>Total Utilization: "+cpu["totalUtil"].toFixed(2)+"%</p>" 
+        html+="<p>User Mode: "+cpu["userMode"].toFixed(2)+"%</p>"
+        html+="<p>Sys Mode: "+cpu["sysMode"].toFixed(2)+"%</p>"
+        html+="</div></div>"
 
+        utilData[cpu["name"]]=cpu["totalUtil"].toFixed(2)
     } 
-    
     document.querySelector("#cpu-val").innerHTML = html;
+    updateCpuChart(utilData)
 }
 
 eel.expose(setNetworkStats)
 function setNetworkStats(data) {
-    console.log("Network Stats:"+data);
-    html="<div>"
+    //console.log("Network Stats:"+data);
+    
+    let html=""
     for(let i = 0; i<data.length; i++)
     { 
         device = JSON.parse(data[i])
-        html+="<p>"+device["name"]+"</p>"
-        html+="<p>Bytes In: "+device["bytesIn"]+"/s</p>"
-        html+="<p>Bytes Out: "+device["bytesOut"]+"/s</p>"
+        html+="<div><div class=\"uk-card uk-card-default uk-card-small uk-card-body\">"
+        html+="<h3 class=\"uk-card-title\">"+device["name"]+"</h3>"
+        html+="<p><span uk-icon=\"icon: download\"></span> Receiving: "+formatBytes(device["bytesIn"],2)+"/s</p>"
+        html+="<p><span uk-icon=\"icon: upload\"></span> Sending: "+formatBytes(device["bytesOut"],2)+"/s</p>"
         html+="<p>Network Bandwidth: "+device["networkBandwidth"]/125000+" Mb/s</p>"
-        html+="<p>Network Utilization: "+device["networkUtilization"]+"% per sec</p>"
-        html+="<hr />"
+        html+="<p>Average Utilization: "+device["networkUtilization"]+" Bytes/s</p>"
+        html+="</div></div>"
 
     }
     html+="</div>"
@@ -94,14 +123,15 @@ function setNetworkStats(data) {
 
 eel.expose(setEstTcp)
 function setEstTcp(est, active) {
-    console.log("Established TCP:"+est);
-    html = "Established Connections: "+est+" Active:"+active
+    //console.log("Established TCP:"+est);
+    let html = "<div class=\"uk-column-1-2  \"><p class=\"uk-text-primary\">"+est+" Established Connections</p><p class=\"uk-text-muted\">"+active+" Active Connections</p></div>";
+    
     document.querySelector("#tcp-val").innerHTML = html;
 }
 
 eel.expose(setTcpConnections)
 function setTcpConnections(data) {
-    console.log("Tcp Connections:"+data);
+    //console.log("Tcp Connections:"+data);
     tcpData=[]
     for(let i = 0; i<data.length; i++)
     { 
@@ -127,7 +157,7 @@ function setTcpConnections(data) {
 
 eel.expose(setUdpConnections)
 function setUdpConnections(data) {
-    console.log("Udp Connections:"+data);
+    //console.log("Udp Connections:"+data);
     udpData=[]
     for(let i = 0; i<data.length; i++)
     { 
@@ -164,56 +194,242 @@ function setProcesses(data) {
             ""+process["name"],
             ""+process["userName"],
             ""+process["inodeNumber"],
-            ""+process["userMode"]+"%",
-            ""+process["sysMode"]+"%",
-            ""+process["total"]+"%",
-            ""+process["vMemUtil"]+"%",
-            ""+process["phyMemUtil"]+"%" 
+            ""+process["userMode"].toFixed(2)+"%",
+            ""+process["sysMode"].toFixed(2)+"%",
+            ""+process["total"].toFixed(2)+"%",
+            ""+formatBytes(process["vMemAvg"],2)+"/s",
+            ""+process["phyMemUtil"].toFixed(2)+"%" 
         ]  
-        console.log(eachProcess)
+        //console.log(eachProcess)
         processesData.push(eachProcess)
     }
 
     $("#process-table").DataTable().clear().draw()
     $("#process-table").DataTable().rows.add(processesData).draw()
 }
-  
-
-$(document).ready(function() {
-    
-    $("#tcp-table").DataTable();
-    $("#udp-table").DataTable();
-    $("#process-table").DataTable({ "order": [[ 6, "desc" ]]});
-});
-
+   
 function changeTimeInterval(selectObj)
 {
     eel.setTimeInterval(selectObj.value)
 }
-/************************* */
-var totalMemory = 0;
-var memoryDp = [
-    { y: 519960, name: "Used", color: "#E7823A" },
-    { y: 363040, name: "Available", color: "#546BC1" }
-]
-var memoryData = {
-	"Used Vs Available Memory": [{
-		cursor: "pointer",
-		innerRadius: "75%",
-		legendMarkerType: "square",
-		name: "Used Vs Available Memory",
-		radius: "100%",
-		showInLegend: true,
-		startAngle: 90,
-		type: "doughnut",
-		dataPoints: memoryDp
-	}]
+
+$(document).ready(function() {
+    
+    $("#tcp-table").DataTable( {
+        language: { search: '', searchPlaceholder: "Search" },paging: false
+    });
+    $("#udp-table").DataTable( {
+        language: { search: '', searchPlaceholder: "Search" },paging: false
+    });
+    $("#process-table").DataTable({      
+        language: { search: '', searchPlaceholder: "Search" },
+        paging: false, 
+        "order": [[ 6, "desc" ]]});
+
+    $('div.dataTables_filter input').addClass('uk-input uk-form-small') 
+});
+
+/**************************/
+/******** Charts **********/
+/**************************/
+window.chartColors = {
+	red: 'rgb(255, 99, 132)',
+	green: 'rgb(75, 192, 192)',
+	yellow: 'rgb(255, 205, 86)',
+	blue: 'rgb(54, 162, 235)',
+	orange: 'rgb(255, 159, 64)',
+	purple: 'rgb(153, 102, 255)',
+	grey: 'rgb(201, 203, 207)'
 };
 
-var memoryChart = new CanvasJS.Chart("memoryChartContainer",{
-    title:{
-        text:"Used Vs Available Memory"
+window.transparentColors = {
+	red: 'rgba(255, 99, 132,.1)',
+	green: 'rgba(75, 192, 192,.1)',
+	yellow: 'rgba(255, 205, 86,.1)',
+	blue: 'rgba(54, 162, 235,.1)',
+	orange: 'rgba(255, 159, 64,.1)',
+	purple: 'rgba(153, 102, 255,.1)',
+	grey: 'rgba(201, 203, 207,.1)'
+};
+
+let memConfig = {
+    type: 'doughnut',
+    data: {
+        datasets: [{
+            data: [
+                0,
+                0
+            ],
+            backgroundColor: [
+                window.chartColors.red,
+                window.transparentColors.red,
+            ],
+            label: 'Memory'
+        }],
+        labels: [
+            'Available',
+            'Free',
+        ]
+    },
+    options: {
+        responsive: true,
+        legend: {
+            position: 'bottom',
+        },
+        title: {
+            display: false,
+            text: 'Memory'
+        },
+        animation: {
+            animateScale: false,
+            animateRotate: false
+        },
+        circumference : 2*Math.PI,
+        rotation : -1*Math.PI
     }
-});
-memoryChart.options.data = visitorsData["New vs Returning Visitors"];
-chart.render();
+};
+ 
+ 
+let cpuConfig = {
+    type: 'line',
+    data: {
+        datasets: []
+    },
+    options: {
+        responsive: true,
+				title: {
+					display: true,
+					text: 'CPU UTILIZATION PER SECOND'
+				},
+				tooltips: {
+					mode: 'index',
+					intersect: false,
+				},
+				hover: {
+					mode: 'nearest',
+					intersect: true
+				},
+				scales: {
+					xAxes: [{
+						display: true,
+						scaleLabel: {
+							display: true,
+							labelString: 'Read Count'
+						}
+					}],
+					yAxes: [{
+						display: true,
+						scaleLabel: {
+							display: true,
+							labelString: 'Total Utilization Per Second'
+                        },
+                        ticks: {
+                            suggestedMin: 0,
+                            suggestedMax: 100
+                        }
+					}]
+                },
+                animation: { 
+                    duration: 0, 
+                },
+			}
+};
+
+
+window.onload=function(){
+    const memoryCtx = document.getElementById('memoryChart').getContext('2d');
+    window.memoryChart = new Chart(memoryCtx,memConfig);
+
+
+    const cpuCtx = document.getElementById('cpuChart').getContext('2d');
+    window.cpuChart = new Chart(cpuCtx,cpuConfig);
+}
+
+function updateMemChart(total , avail)
+{ 
+    //console.log(total+" "+ avail)
+
+    memConfig.data.datasets.forEach(function(dataset) {
+        dataset.data.pop() 
+        dataset.data.pop() 
+    });
+
+    memConfig.data.datasets.forEach(function(dataset) {
+        dataset.data.push(avail);
+        dataset.data.push((total-avail).toFixed(2));
+    });
+
+    window.memoryChart.update();
+
+}
+
+//let cpuChartPausedFlag = false
+function updateCpuChart(utilData)
+{
+    if(cpuConfig.data.datasets.length == 0)    {
+        initializeCpuChart(utilData)        
+    }
+    else
+    {
+        addToCpuChart(utilData)        
+    }
+
+    //if(!cpuChartPausedFlag)
+        window.cpuChart.update(); 
+}   
+
+/*function toggleCpuChart()
+{
+    cpuChartPausedFlag = !cpuChartPausedFlag
+}*/
+
+function addToCpuChart(utilData)
+{  
+    let i = 0
+    let flag = false
+    for (const [key, value] of Object.entries(utilData)) { 
+
+        cpuConfig.data.datasets[i]['data'].push(value)
+        if (cpuConfig.data.datasets[i]['data'].length >= 11)
+        { 
+            cpuConfig.data.datasets[i]['data'].shift()
+            flag = true
+        } 
+
+        i++
+    } 
+
+    if (flag){
+        //console.log(cpuConfig.data.labels)
+        let x = cpuConfig.data.labels.shift()
+        x+=9
+        cpuConfig.data.labels.push(x)
+    }
+}
+
+
+
+function initializeCpuChart(utilData)
+{
+    let colorList = Object.values(window.chartColors)
+    let transparentColorList = Object.values(window.transparentColors)
+    
+    let i=0
+    for (const [key, value] of Object.entries(utilData)) {
+        var newDataset = {
+            label: key, 
+            borderColor: colorList[i], 
+            backgroundColor: transparentColorList[i], 
+            data: [],
+            fill: true
+        }; 
+        
+        newDataset.data.push(value);
+        cpuConfig.data.datasets.push(newDataset);
+ 
+        cpuConfig.data.labels = [1,2,3,4,5,6,7,8,9,10]; 
+        i++  
+    }
+
+     
+}

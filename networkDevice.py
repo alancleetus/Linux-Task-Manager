@@ -36,6 +36,16 @@ class NetworkDevice:
     def calculateAverage(self, dictItem):
         return float(dictItem["curr"]+dictItem["prev"])/2
 
+    def calculateAveragePerSecond(self):
+        try:
+            timeInterval = self.calculateDelta(self.time)
+ 
+            avg = ((self.calculateDelta(self.bytesIn))+(self.calculateDelta(self.bytesOut)))  / timeInterval           
+            return round2(avg)
+        except:
+            print("Error average network utilization per second")
+            return 0
+
     def calculateUtilizationPerSecond(self):
         try:
             if self.networkBandwidth["prev"] == 0:
@@ -59,7 +69,7 @@ class NetworkDevice:
 
     def __str__(self):
 
-        msg = "Name: {}\n Bytes in\tprev:{}\tcurr:{}\n Bytes out\tprev:{}\tcurr:{}\n Network Bandwidth\tprev:{}\tcurr:{}\n Utilization:\t{}% per sec\n Read Time\tprev:{}\tcurr:{}\n".format(
+        msg = "Name: {}\n Bytes in\tprev:{}\tcurr:{}\n Bytes out\tprev:{}\tcurr:{}\n Network Bandwidth\tprev:{}\tcurr:{}\n Average Utilization:\t{} Bytes per sec\n Read Time\tprev:{}\tcurr:{}\n".format(
             self.name,
             self.bytesIn["prev"],
             self.bytesIn["curr"],
@@ -67,7 +77,7 @@ class NetworkDevice:
             self.bytesOut["curr"],
             self.networkBandwidth["prev"],
             self.networkBandwidth["curr"],
-            round2(self.calculateUtilizationPerSecond()),
+            round2(self.calculateAveragePerSecond()),
             round2(self.time["prev"]),
             round2(self.time["curr"])
         )
@@ -83,7 +93,7 @@ class NetworkDevice:
         data['bytesIn'] = round2(self.calculateDelta(self.bytesIn))
         data['bytesOut'] = round2(self.calculateDelta(self.bytesOut))
         data['networkBandwidth'] = round2(self.calculateAverage(self.networkBandwidth))
-        data['networkUtilization'] = round2(self.calculateUtilizationPerSecond())
+        data['networkUtilization'] = round2(self.calculateAveragePerSecond())
         
         json_data = json.dumps(data)
         return json_data

@@ -67,13 +67,37 @@ class Process:
 
         return {"userMode":round2(userModeUtil), "sysMode":round2(sysModeUtil),"total":round2(totalUtil)}
 
-    def calculateVmemUtil(self, vMemTotal):
+    def calculateVMemUtil(self, vMemTotal):
+        """
+        return vmem persec in bytes
+        """
         try:
-            #delta_vmem = int(self.vmem["curr"]) - int(self.vmem["prev"]) 
-            delta_vmem = int(self.vmem["curr"])
+            """
+            #this calculated vmem % per second
+
+            delta_vmem = int(self.vmem["curr"]) - int(self.vmem["prev"]) 
             totalUtil = (delta_vmem/int(vMemTotal))*100    
-            #print(delta_vmem, vMemTotal, totalUtil)     
+            return round2(totalUtil)"""
+            
+            timeInterval = int(self.time["curr"])-int(self.time["prev"])
+            delta_vmem = int(self.vmem["curr"])-int(self.vmem["prev"])
+            totalUtil = (delta_vmem/timeInterval)    
             return round2(totalUtil)
+            
+        except:
+            #print("Error calculation vmem", vMemTotal, self.vmem)
+            return 0
+
+    def calculateVMemAvg(self):
+        """
+        return vmem persec in bytes
+        """
+        try:
+            timeInterval = int(self.time["curr"])-int(self.time["prev"])
+            avg_vmem = (int(self.vmem["curr"])+int(self.vmem["prev"]))/2
+            avgVMem = (avg_vmem/timeInterval)    
+            return round2(avgVMem)
+            
         except:
             #print("Error calculation vmem", vMemTotal, self.vmem)
             return 0

@@ -32,9 +32,14 @@ def updateDataThread():
             *********************************************************
             """
             memTotal, memUsed, memUtil = memStats.fetchAll()
+            
+            """
             eel.setMemoryTotal(round2(memTotal))
             eel.setMemoryAvailable(round2(memUsed.calculateAverage())) 
             eel.setMemoryUtilization(round2(memUtil))
+            """
+            eel.setMemoryStats([round2(memTotal), round2(memUsed.calculateAverage()), round2(memUtil)])
+            
 
 
             """

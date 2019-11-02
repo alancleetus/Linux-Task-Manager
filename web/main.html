@@ -2,7 +2,7 @@
 <html>
 
 <head>
-    <title>Task Manager</title>
+    <title>Linux Task Manager</title>
     <script type="text/javascript" src="eel.js"></script>
     <script type="text/javascript" src="./js/jquery-3.3.1.min.js"></script>
 
@@ -13,9 +13,19 @@
     <script src="./js/uikit.min.js"></script>
     <script src="./js/uikit-icons.min.js"></script>
 
-    <script type="text/javascript" src="./js/canvasjs.min.js"></script>
+    <script type="text/javascript" src="./js/charts.min.js"></script>
     <script type="text/javascript" src="./js/myscripts.js"></script>
 
+    <style>
+    body, html
+    {
+        text-align:center
+    }
+    .uk-card-title
+    {
+        text-transform: uppercase;
+    }
+    </style>
 
 </head>
 
@@ -26,15 +36,16 @@
             <div class="uk-width-expand uk-container">
                 <div class="uk-margin-left
                 uk-margin-top">
-                    <h1 class="uk-heading-small">Linux Task Manager</h1>
+                    <h2 class="uk-heading-small">Linux Task Manager</h2>
                 </div>
             </div>
 
-            <div class="uk-width-auto">
+            <div class="uk-width-auto" style="min-height:auto">
                 <div class="uk-margin-right
                 uk-margin-top">
                     <div uk-form-custom="target: > * > span:last-child">
-                        <select uk-tooltip="title: Change Update Frequency; pos: left" onchange="changeTimeInterval(this)">
+                        <select uk-tooltip="title: Change Update Frequency; pos: left"
+                            onchange="changeTimeInterval(this)">
                             <option value="1">1 sec</option>
                             <option value="2">2 sec</option>
                             <option value="5">5 sec</option>
@@ -54,8 +65,7 @@
         <!-- Tabs starts here-->
         <ul class="uk-tab" data-uk-tab="{connect:'#content-tab'}">
             <li><a href="">CPU</a></li>
-            <li><a href="">DISK</a></li>
-            <li><a href="">MEMORY</a></li>
+            <li><a href="">MEMORY / DISK</a></li>
             <li><a href="">NETWORK</a></li>
             <li><a href="">PROCESSES</a></li>
             <li><a href="">TCP</a></li>
@@ -63,32 +73,82 @@
         </ul>
 
         <div id="content-tab" class="uk-switcher uk-margin">
-            <div id="cpu-stats"> 
-                <p><span id="intr-val">_</span> interrupts/sec</p>
-                <p><span id="ctxt-val">_</span> context switches/sec</p>
-                <hr />
-                <div id="cpu-val">
+
+            <div class="uk-container" id="cpu-stats">
+
+                <div class="uk-child-width-1-2@s uk-grid-match" uk-grid>
+                    <div  >
+                        <div  class="uk-card uk-card-default   uk-card-body">
+                            <p id="intr-val"></p>
+                        </div>
+                    </div>
+                    <div>
+                        <div  class="uk-card uk-card-default   uk-card-body">
+                            <p id="ctxt-val"></p>
+                        </div>
+                    </div>
+                </div>
+
+                <h3 class="uk-card-title uk-text-center"><span class="uk-icon uk-icon-image"
+                        style="background-image: url(./img/microchip-solid.svg);"></span> CPU STATISTICS
+                </h3>
+
+                <div class="uk-child-width-1-2@s uk-child-width-1-4@l uk-grid-match" uk-grid id="cpu-val">
 
                 </div>
 
-            </div>
-            <div id="disk-stats"> 
-                <div><span id="disks-val">_</span></div>
-            </div>
-            <div id="mem-stats"> 
-                <p>Memory Utilization: <span id="memoryUtilization-val">_</span>% per sec</p>
-                <p>Total Memory: <span id="memoryTotal-val">_</span> MB</p>
-                <p>Memory Available: <span id="memoryAvailable-val">_</span> MB</p>
                 <hr />
-                <p>Charts</p>
-                <div id="memoryChartContainer" style="height: 370px; width: 100%;"></div>
+                <div id="canvas-holder">
+                    <!--button class="uk-button" id="cpuChartPause" onclick="toggleCpuChart()">Pause Chart</button-->
+                    <canvas id="cpuChart"></canvas>
+                </div>
+
             </div>
-            <div id="network-stats"> 
-                <div><span id="network-val">_</span></div>
+
+
+            <div class="uk-container" id="mem-disk-stats">
+
+                <div class="uk-container">
+                    <div class="uk-card uk-card-default uk-card-body">
+                        <h3 class="uk-card-title uk-text-center"><span class="uk-icon uk-icon-image"
+                                style="background-image: url(./img/memory-solid.svg);"></span> MEMORY STATISTICS</h3>
+                        <div class="uk-flex uk-flex-middle uk-text-center">
+                            <div id="canvas-holder" class="uk-width-1-2@s">
+                                <canvas id="memoryChart"></canvas>
+                            </div>
+                            <div class="uk-width-auto@s ">
+                                <p>Memory Utilization: <span id="memoryUtilization-val">_</span>% per sec</p>
+                                <p>Total Memory: <span id="memoryTotal-val">_</span> MB</p>
+                                <p>Memory Available: <span id="memoryAvailable-val">_</span> MB</p>
+                            </div>
+
+                        </div>
+                    </div>
+
+                </div>
+
+
+                <h3 class="uk-card-title uk-text-center"><span class="uk-icon uk-icon-image"
+                        style="background-image: url(./img/database-solid.svg);"></span> DISK STATISTICS</h3>
+                <div class="uk-child-width-1-2@s uk-child-width-1-4@l uk-grid-match" uk-grid id="disks-val">
+
+                </div>
             </div>
-            <div id="processes-stats"> 
+
+
+            <div class="uk-container" id="network-stats">
+                <h3 class="uk-card-title uk-text-center"><span class="uk-icon uk-icon-image"
+                        style="background-image: url(./img/network-wired-solid.svg);"></span> NETWORK DEVICES</h3>
+
+                <div class="uk-child-width-1-2@s uk-child-width-1-4@l uk-grid-match" uk-grid id="network-val">
+
+                </div>
+            </div>
+
+
+            <div id="processes-stats">
                 <div>
-                    <table class="uk-table uk-table-striped" id="process-table">
+                    <table class="uk-table uk-table-striped   cell-border" id="process-table">
                         <thead>
                             <tr>
                                 <th>PID</th>
@@ -109,10 +169,10 @@
                 </div>
             </div>
 
-            <div id="tcp-connection-stats"> 
+            <div class="uk-container" id="tcp-connection-stats">
                 <div>
                     <p id="tcp-val">_</p>
-                    <table class="uk-table uk-table-striped" id="tcp-table">
+                    <table class="uk-table uk-table-striped   cell-border" id="tcp-table">
                         <thead>
                             <tr>
                                 <th>Conn ID</th>
@@ -132,9 +192,9 @@
                 </div>
             </div>
 
-            <div id="udp-connection-stats"> 
+            <div class="uk-container" id="udp-connection-stats">
                 <div>
-                    <table class="uk-table uk-table-striped" id="udp-table">
+                    <table class="uk-table uk-table-striped   cell-border" id="udp-table">
                         <thead>
                             <tr>
                                 <th>Conn ID</th>

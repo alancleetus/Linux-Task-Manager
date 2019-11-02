@@ -53,7 +53,7 @@ def getPageSize():
 
 getPageSize()
 
-def calculateVmemTotal():
+def calculateVMemTotal():
     """
     This function calculates the max virtual memory size of the system.
 
@@ -76,7 +76,7 @@ def calculateVmemTotal():
     
     return vMemTotal
 
-calculateVmemTotal()
+calculateVMemTotal()
 
 def getAllPids():
     """
@@ -224,7 +224,8 @@ def toJSON():
         data['userMode'] = cpu["userMode"]
         data['sysMode'] = cpu["sysMode"]
         data['total'] = cpu["total"]
-        data['vMemUtil'] = eachProcess.calculateVmemUtil(vMemTotal)
+        data['vMemUtil'] = eachProcess.calculateVMemUtil(vMemTotal)
+        data['vMemAvg'] = eachProcess.calculateVMemAvg()
         data['phyMemUtil'] = eachProcess.calculatePhyMemUtil(phyMemTotal)       
         dataList.append(data)
     
@@ -236,7 +237,7 @@ def printAll():
     global phyMemTotal
     global vMemTotal
     print("\n|{:>6}|{:>15}|{:>15}|{:>15}|{:>15}|{:>15}|{:>15}|{:>15}|{:>15}|".format(
-            "pid", "Program", "UserName", "Inode Number", "User Util", "Sys Util", "Total Util", "Vmem Util", "Phy Mem Util"))
+            "pid", "Program", "UserName", "Inode Number", "User Util", "Sys Util", "Total Util", "VMem Avg", "Phy Mem Util"))
     print("|{:>6}|{:>15}|{:>15}|{:>15}|{:>15}|{:>15}|{:>15}|{:>15}|{:>15}|".format("","","", "", "", "", "", "", ""))
     
     for pid, eachProcess in fetchAll().items():
@@ -249,7 +250,7 @@ def printAll():
             cpu["userMode"],
             cpu["sysMode"],
             cpu["total"], 
-            eachProcess.calculateVmemUtil(vMemTotal),
+            eachProcess.calculateVMemAvg(),
             eachProcess.calculatePhyMemUtil(phyMemTotal)))
         
  
