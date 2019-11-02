@@ -111,7 +111,7 @@ function setNetworkStats(data) {
         html+="<p><span uk-icon=\"icon: download\"></span> Receiving: "+formatBytes(device["bytesIn"],2)+"/s</p>"
         html+="<p><span uk-icon=\"icon: upload\"></span> Sending: "+formatBytes(device["bytesOut"],2)+"/s</p>"
         html+="<p>Network Bandwidth: "+device["networkBandwidth"]/125000+" Mb/s</p>"
-        html+="<p>Average Utilization: "+device["networkUtilization"]+" Bytes/s</p>"
+        html+="<p>Average Utilization: "+formatBytes(device["networkUtilization"],2)+"/s</p>"
         html+="</div></div>"
 
     }
@@ -151,8 +151,8 @@ function setTcpConnections(data) {
        tcpData.push(tcpConn)
     }
 
-    $("#tcp-table").DataTable().clear().draw()
-    $("#tcp-table").DataTable().rows.add(tcpData).draw()
+    tcpTable.clear().draw()
+    tcpTable.rows.add(tcpData).draw()
 }
 
 eel.expose(setUdpConnections)
@@ -177,8 +177,8 @@ function setUdpConnections(data) {
        udpData.push(udpConn)
     }
 
-    $("#udp-table").DataTable().clear().draw()
-    $("#udp-table").DataTable().rows.add(udpData).draw()
+    udpTable.clear().draw()
+    udpTable.rows.add(udpData).draw()
 }
 
 eel.expose(setProcesses)
@@ -204,8 +204,8 @@ function setProcesses(data) {
         processesData.push(eachProcess)
     }
 
-    $("#process-table").DataTable().clear().draw()
-    $("#process-table").DataTable().rows.add(processesData).draw()
+    processTable.clear().draw()
+    processTable.rows.add(processesData).draw()
 }
    
 function changeTimeInterval(selectObj)
@@ -213,20 +213,27 @@ function changeTimeInterval(selectObj)
     eel.setTimeInterval(selectObj.value)
 }
 
-$(document).ready(function() {
-    
-    $("#tcp-table").DataTable( {
-        language: { search: '', searchPlaceholder: "Search" },paging: false
-    });
-    $("#udp-table").DataTable( {
-        language: { search: '', searchPlaceholder: "Search" },paging: false
-    });
-    $("#process-table").DataTable({      
-        language: { search: '', searchPlaceholder: "Search" },
-        paging: false, 
-        "order": [[ 6, "desc" ]]});
+let tcpTable = ""
+let udpTable = ""
+let processTable = ""
 
+$(document).ready(function() {
+     
+    tcpTable = $("#tcp-table").DataTable( {
+    language: { search: '', searchPlaceholder: "Search" },paging: false
+    });
+
+    udpTable = $("#udp-table").DataTable( {
+    language: { search: '', searchPlaceholder: "Search" },paging: false
+    });
+
+    processTable = $("#process-table").DataTable({      
+    language: { search: '', searchPlaceholder: "Search" },
+    paging: false, 
+    "order": [[ 6, "desc" ]]});
+    
     $('div.dataTables_filter input').addClass('uk-input uk-form-small') 
+    $('div.dataTables_filter').css('width', '100%') 
 });
 
 /**************************/
@@ -267,7 +274,7 @@ let memConfig = {
             label: 'Memory'
         }],
         labels: [
-            'Available',
+            'Used',
             'Free',
         ]
     },

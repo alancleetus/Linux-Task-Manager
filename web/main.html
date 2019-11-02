@@ -17,14 +17,14 @@
     <script type="text/javascript" src="./js/myscripts.js"></script>
 
     <style>
-    body, html
-    {
-        text-align:center
-    }
-    .uk-card-title
-    {
-        text-transform: uppercase;
-    }
+        body,
+        html {
+            text-align: center
+        }
+
+        .uk-card-title {
+            text-transform: uppercase;
+        }
     </style>
 
 </head>
@@ -76,32 +76,26 @@
 
             <div class="uk-container" id="cpu-stats">
 
-                <div class="uk-child-width-1-2@s uk-grid-match" uk-grid>
-                    <div  >
-                        <div  class="uk-card uk-card-default   uk-card-body">
-                            <p id="intr-val"></p>
-                        </div>
-                    </div>
-                    <div>
-                        <div  class="uk-card uk-card-default   uk-card-body">
-                            <p id="ctxt-val"></p>
-                        </div>
-                    </div>
-                </div>
-
                 <h3 class="uk-card-title uk-text-center"><span class="uk-icon uk-icon-image"
                         style="background-image: url(./img/microchip-solid.svg);"></span> CPU STATISTICS
                 </h3>
+
+                <div class="uk-column-1-2">
+                    <p class="uk-text-primary" id="intr-val"> </p>
+                    <p class="uk-text-primary" id="ctxt-val"> </p>
+                </div>
+
 
                 <div class="uk-child-width-1-2@s uk-child-width-1-4@l uk-grid-match" uk-grid id="cpu-val">
 
                 </div>
 
                 <hr />
-                <div id="canvas-holder">
+                <div class="uk-container" id="canvas-holder">
                     <!--button class="uk-button" id="cpuChartPause" onclick="toggleCpuChart()">Pause Chart</button-->
                     <canvas id="cpuChart"></canvas>
                 </div>
+                <hr />
 
             </div>
 
@@ -119,7 +113,7 @@
                             <div class="uk-width-auto@s ">
                                 <p>Memory Utilization: <span id="memoryUtilization-val">_</span>% per sec</p>
                                 <p>Total Memory: <span id="memoryTotal-val">_</span> MB</p>
-                                <p>Memory Available: <span id="memoryAvailable-val">_</span> MB</p>
+                                <p>Memory Used: <span id="memoryAvailable-val">_</span> MB</p>
                             </div>
 
                         </div>
@@ -146,9 +140,13 @@
             </div>
 
 
-            <div id="processes-stats">
+            <div class="uk-container" id="processes-stats">
+                <h3 class="uk-card-title uk-text-center"><span class="uk-icon uk-icon-image"
+                        style="background-image: url(./img/cogs-solid.svg);"></span> PROCESS STATISTICS
+                </h3>
+
                 <div>
-                    <table class="uk-table uk-table-striped   cell-border" id="process-table">
+                    <table class="uk-table uk-table-striped   cell-border compact" id="process-table">
                         <thead>
                             <tr>
                                 <th>PID</th>
@@ -170,9 +168,15 @@
             </div>
 
             <div class="uk-container" id="tcp-connection-stats">
+                <h3 class="uk-card-title uk-text-center"><span class="uk-icon uk-icon-image"
+                        style="background-image: url(./img/ethernet-solid.svg);"></span> TCP STATISTICS
+                </h3>
+
                 <div>
-                    <p id="tcp-val">_</p>
-                    <table class="uk-table uk-table-striped   cell-border" id="tcp-table">
+                    <div id="tcp-val"></div>
+                </div>
+                <div>
+                    <table class="uk-table uk-table-striped   cell-border compact" id="tcp-table">
                         <thead>
                             <tr>
                                 <th>Conn ID</th>
@@ -193,8 +197,11 @@
             </div>
 
             <div class="uk-container" id="udp-connection-stats">
+                <h3 class="uk-card-title uk-text-center"><span class="uk-icon uk-icon-image"
+                        style="background-image: url(./img/ethernet-solid.svg);"></span> UDP STATISTICS
+                </h3>
                 <div>
-                    <table class="uk-table uk-table-striped   cell-border" id="udp-table">
+                    <table class="uk-table uk-table-striped   cell-border compact" id="udp-table">
                         <thead>
                             <tr>
                                 <th>Conn ID</th>
