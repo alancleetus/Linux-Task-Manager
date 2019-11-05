@@ -65,10 +65,10 @@ function setDiskStats(data) {
         disk = JSON.parse(data[i])
         html+="<div><div class=\"uk-card uk-card-default uk-card-small uk-card-body\">"
         html+="<h3 class=\"uk-card-title\">"+disk["name"]+"</h3>"
-        html+="<p>Disk Reads: "+disk["diskReads"].toFixed(2)+"/s</p>"
-        html+="<p>Disk Writes: "+disk["diskWrites"].toFixed(2)+"/s</p>"
-        html+="<p>Block Reads: "+disk["blockReads"].toFixed(2)+"/s</p>"
-        html+="<p>Block Writes: "+disk["blockWrites"].toFixed(2)+"/s</p>"
+        html+="<p>Disk Reads: "+disk["diskReads"].toFixed(2)+"reads/s</p>"
+        html+="<p>Disk Writes: "+disk["diskWrites"].toFixed(2)+"writes/s</p>"
+        html+="<p>Block Reads: "+disk["blockReads"].toFixed(2)+"reads/s</p>"
+        html+="<p>Block Writes: "+disk["blockWrites"].toFixed(2)+"writes/s</p>"
         html+="</div></div>"
     } 
     
@@ -106,7 +106,7 @@ function setNetworkStats(data) {
     for(let i = 0; i<data.length; i++)
     { 
         device = JSON.parse(data[i])
-        html+="<div><div class=\"uk-card uk-card-default uk-card-small uk-card-body\">"
+        html+="<div><div class=\"uk-card uk-card-default uk-card-body\">"
         html+="<h3 class=\"uk-card-title\">"+device["name"]+"</h3>"
         html+="<p><span uk-icon=\"icon: download\"></span> Receiving: "+formatBytes(device["bytesIn"],2)+"/s</p>"
         html+="<p><span uk-icon=\"icon: upload\"></span> Sending: "+formatBytes(device["bytesOut"],2)+"/s</p>"
