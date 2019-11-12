@@ -21,6 +21,32 @@ def initDiskList(diskStatsFile):
         tempDisk = Disk(diskName)
         diskList.append(tempDisk)
 
+def removeFromDiskList(statsAllDisks):
+    global diskList
+    
+    removedDisk = []
+    for disk in diskList:
+        diskName = disk.name
+        removedDisk.append(diskName)
+
+    for statsForOneDisk in statsAllDisks:
+        diskCols = statsForOneDisk.split()
+        diskName = diskCols[2]
+        removedDisk.remove(diskName)
+
+    #print(removedDisk)
+
+    removedIndex = []
+    for disk in diskList:
+        diskIndex = diskList.index(disk)
+        if disk.name in removedDisk:
+            #print(disk.name, " ", diskIndex)
+            removedIndex.insert(0, diskIndex)
+
+    for i in removedIndex:
+        diskList.pop(i)
+
+    #print(diskList)
 
 def parseInfo(diskStatsFile, readTime): 
     """
@@ -38,10 +64,20 @@ def parseInfo(diskStatsFile, readTime):
         for statsForOneDisk in statsAllDisks:
             diskCols = statsForOneDisk.split()
             
-            diskName = diskCols[2]
-            diskIndex = diskList.index(Disk(diskName))
-
+            diskName = diskCols[2] 
+            try:
+                diskIndex = diskList.index(Disk(diskName)) 
+            except ValueError: #new  disk added
+                #print("New Disk plugged in:",diskName)
+                tempDisk = Disk(diskName)
+                diskList.append(tempDisk)
+                diskIndex = diskList.index(Disk(diskName))
+            
             diskList[diskIndex].updateAll(int(diskCols[4]), int(diskCols[8]), int(diskCols[6]), int(diskCols[10]), readTime)
+
+        if len(statsAllDisks) < len(diskList):
+            removeFromDiskList(statsAllDisks)
+
         return diskList
     except:
         print("Error occurred while parsing diskstat file")
