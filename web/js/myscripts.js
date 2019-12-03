@@ -198,7 +198,8 @@ function setProcesses(data) {
             ""+process["sysMode"].toFixed(2)+"%",
             ""+process["total"].toFixed(2)+"%",
             ""+formatBytes(process["vMemAvg"],2)+"/s",
-            ""+process["phyMemUtil"].toFixed(2)+"%" 
+            ""+process["phyMemUtil"].toFixed(2)+"%",
+            "<button class=\"uk-button uk-button-danger\">End Task</button>"  
         ]  
         //console.log(eachProcess)
         processesData.push(eachProcess)
@@ -207,10 +208,15 @@ function setProcesses(data) {
     processTable.clear().draw()
     processTable.rows.add(processesData).draw()
 }
-   
+ 
 function changeTimeInterval(selectObj)
 {
     eel.setTimeInterval(selectObj.value)
+}
+
+function setLoggerData(logData){
+    $("#keylogger-val").innerHTML = "<p id='log-date'>"+logData[0]+"</p><p id='log-time'>"+logData[1]
+    +"</p><p id='log-content'>"+logData[2]+"</p>";
 }
 
 let tcpTable = ""
@@ -231,6 +237,17 @@ $(document).ready(function() {
     language: { search: '', searchPlaceholder: "Search" },
     paging: false, 
     "order": [[ 6, "desc" ]]});
+
+    $('#process-table tbody').on( 'click', 'button', function () {
+        var data = processTable.row( $(this).parents('tr') ).data();
+
+        if(data[2]=="root")
+            alert("root task cannot be killed");
+        else{
+            console.log("ending task:"+ data[0]);
+            eel.endTask(data[0]);
+        }
+    } );
     
     $('div.dataTables_filter input').addClass('uk-input uk-form-small') 
     $('div.dataTables_filter').css('width', '100%') 

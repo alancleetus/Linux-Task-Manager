@@ -5,7 +5,9 @@ import cpuStats
 import processStats
 import netStats
 import tcpUdpConnStats
+import keylogger
 from helperFunctions import round2 
+import subprocess
 
 eel.init('web')
 
@@ -16,6 +18,11 @@ def setTimeInterval(timeInterval):
     global TIME_INTERVAL
     TIME_INTERVAL = float(timeInterval)
     print("Changing time interval to", TIME_INTERVAL)
+
+@eel.expose
+def endTask(pid):
+    print("Ending Task with PID:", pid) 
+    subprocess.run(["kill","-9",pid])
 
 def updateDataThread():
     try:
@@ -133,6 +140,7 @@ def updateDataThread():
 
             eel.setEstTcp(establishedTcp, len(tcp))
  
+            eel.setLoggerData(keylogger.fetchAll())
     except KeyboardInterrupt:
         print("Closing")
 
