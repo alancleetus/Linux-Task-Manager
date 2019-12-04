@@ -1,0 +1,16 @@
+#keylogger-val
+{
+	text-align: left;
+	background-color: black;
+	color:lime;
+	padding:20px;
+	min-height: 100%;
+	min-width: 90%;
+	overflow-y:scroll;
+	margin:10px;
+}
+
+#log-date,#log-time,#log-content{
+	padding-right:10px;
+}
+

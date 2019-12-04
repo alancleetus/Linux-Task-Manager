@@ -214,9 +214,11 @@ function changeTimeInterval(selectObj)
     eel.setTimeInterval(selectObj.value)
 }
 
+eel.expose(setLoggerData)
 function setLoggerData(logData){
-    $("#keylogger-val").innerHTML = "<p id='log-date'>"+logData[0]+"</p><p id='log-time'>"+logData[1]
-    +"</p><p id='log-content'>"+logData[2]+"</p>";
+    consoleLog(logData)
+    let html = "<p><span id='log-date'>"+logData[0]+"</span><span id='log-time'>"+logData[1]+"</span><span id='log-content'>"+logData[2]+"</span></p>";
+    $("#keylogger-val").append(html); 
 }
 
 let tcpTable = ""

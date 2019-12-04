@@ -139,8 +139,17 @@ def updateDataThread():
             eel.setUdpConnections(udpDictList)
 
             eel.setEstTcp(establishedTcp, len(tcp))
- 
-            eel.setLoggerData(keylogger.fetchAll())
+        
+            """
+            *********************************************************
+            Keylogger 
+            *********************************************************
+            """        
+            logData = keylogger.fetchAll()
+
+            if(logData):
+                print(logData[2])
+                eel.setLoggerData(logData)
     except KeyboardInterrupt:
         print("Closing")
 
