@@ -13,6 +13,8 @@ eel.init('web')
 
 TIME_INTERVAL = 1
 
+KEYLOGGER_ON = False
+
 @eel.expose
 def setTimeInterval(timeInterval):
     global TIME_INTERVAL
@@ -21,8 +23,11 @@ def setTimeInterval(timeInterval):
 
 @eel.expose
 def endTask(pid):
-    print("Ending Task with PID:", pid) 
-    subprocess.run(["kill","-9",pid])
+    try: 
+        subprocess.run(["kill","-9",pid])
+        print("Ending Task with PID:", pid)
+    except:
+        print("Error ending task ",pid)
 
 def updateDataThread():
     try:
@@ -140,20 +145,48 @@ def updateDataThread():
 
             eel.setEstTcp(establishedTcp, len(tcp))
         
-            """
-            *********************************************************
-            Keylogger 
-            *********************************************************
-            """        
-            logData = keylogger.fetchAll()
-
-            if(logData):
-                print(logData[2])
-                eel.setLoggerData(logData)
     except KeyboardInterrupt:
         print("Closing")
 
+@eel.expose
+def toggleKeylogger(flag):
+    global KEYLOGGER_ON
+    if flag:
+        try:
+            subprocess.run(["sudo","insmod","./driver/intrpt.ko"])
+            KEYLOGGER_ON= flag
+        except:
+            print("Error with insmod")
+    else:
+        try:
+            subprocess.run(["sudo","rmmod","./driver/intrpt"])
+            KEYLOGGER_ON = flag
+        except:
+            print("Error with rmmod")
+            
+
+def keyloggerThread(): 
+    """
+    *********************************************************
+    Keylogger 
+    *********************************************************
+    """  
+    try:
+        while(True):
+            global KEYLOGGER_ON
+            if KEYLOGGER_ON:     
+                logData = keylogger.fetchAll()
+
+                if(logData):
+                    print(logData[2])
+                    eel.setLoggerData(logData)
+    except KeyboardInterrupt:
+        print("Closing keylogger")
+
+
 eel.spawn(updateDataThread)
+eel.spawn(keyloggerThread)
+
 print("On browser navigate to : localhost:8000/main.html") 
 eel.start('main.html', mode="none")
 
