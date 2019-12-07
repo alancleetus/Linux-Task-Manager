@@ -1,3 +1,3 @@
-/home/linux/Desktop/driver/intrpt.ko
-/home/linux/Desktop/driver/intrpt.o
+/home/linux/Desktop/Linux-Task-Manager/driver/intrpt.ko
+/home/linux/Desktop/Linux-Task-Manager/driver/intrpt.o
 

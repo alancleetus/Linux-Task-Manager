@@ -214,16 +214,25 @@ function changeTimeInterval(selectObj)
     eel.setTimeInterval(selectObj.value)
 }
 
+let lastKeyloggerTime = "";
 eel.expose(setLoggerData)
 function setLoggerData(logData){
     consoleLog(logData)
-    let html = "<p><span id='log-date'>"+logData[0]+"</span><span id='log-time'>"+logData[1]+"</span><span id='log-content'>"+logData[2]+"</span></p>";
-    $("#keylogger-val").append(html); 
+    if(lastKeyloggerTime != logData[1])
+    {
+        let html = "<p><span id='log-date'>"+logData[0]+"</span><span id='log-time'>"+logData[1]+"</span><span id='log-content'>"+logData[2]+"</span></p>";
+        $("#keylogger-val").append(html); 
+        lastKeyloggerTime = logData[1];
+    }
+
+
 }
 
 let tcpTable = ""
 let udpTable = ""
 let processTable = ""
+let keylogger_on = false
+ 
 
 $(document).ready(function() {
      
@@ -253,6 +262,19 @@ $(document).ready(function() {
     
     $('div.dataTables_filter input').addClass('uk-input uk-form-small') 
     $('div.dataTables_filter').css('width', '100%') 
+    
+    $("#keylogger-button").click(function toggleKeylogger(){
+		keylogger_on = keylogger_on? false : true;
+	 	
+		eel.toggleKeylogger(keylogger_on);
+		console.log("keylogger_on:"+keylogger_on);
+        
+        let msg = "<p id ='keylogger-alert'>";
+        msg += keylogger_on ? "Turning Keylogger ON" : "Turning Keylogger OFF";
+        msg+="</p>";
+        $("#keylogger-val").append(msg); 
+		document.getElementById("keylogger-button").innerHTML =  keylogger_on ? "Turn Keylogger OFF" : "Turn Keylogger ON";    
+    });
 });
 
 /**************************/

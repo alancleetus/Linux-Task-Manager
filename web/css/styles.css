@@ -4,13 +4,26 @@
 	background-color: black;
 	color:lime;
 	padding:20px;
-	min-height: 100%;
+	min-height: 400px;
 	min-width: 90%;
 	overflow-y:scroll;
 	margin:10px;
 }
 
+#keylogger-val > p
+{
+	margin:2px;
+
+}
+
+#keylogger-alert
+{
+	color: orange;
+}
+
+
 #log-date,#log-time,#log-content{
+
 	padding-right:10px;
 }
 

