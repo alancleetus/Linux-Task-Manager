@@ -186,7 +186,7 @@ static void got_char(struct work_struct *work)
 					my_tm.tm_mon+1,
 					my_tm.tm_mday,  
 					my_tm.tm_year+1900,
-					my_tm.tm_hour, 
+					my_tm.tm_hour-8, 
 					my_tm.tm_min, 
 					my_tm.tm_sec,
 					log_buffer
