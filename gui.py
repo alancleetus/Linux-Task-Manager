@@ -1,3 +1,6 @@
+"""
+Author: Alan Cleetus
+"""
 import eel
 import memStats
 import diskStats
