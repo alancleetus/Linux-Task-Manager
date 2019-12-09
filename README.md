@@ -1,7 +1,6 @@
 # Linux-Task-Manager
 Author: Alan Cleetus
 
-
 To run the gui use the command:
     sudo python3 gui.py 
 
@@ -19,3 +18,6 @@ All backend code is written in python 3.6
 Driver code is written in C.  The source code can be found in the /driver directory.
 
 Code was tested in Linux Mint 19 which runs kernel version 4.15.x
+
+This program uses eel[https://github.com/samuelhwilliams/Eel] as its front end.
+To install eel use the command: pip3 install eel
