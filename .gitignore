@@ -2,3 +2,13 @@
 *.pyc
 *.pyo
 __pycache__
+
+.*
+*.o
+*.o.*
+
+*.ko.*
+*.mod.*
+*.order
+Module.sysmvers
+modules.order
